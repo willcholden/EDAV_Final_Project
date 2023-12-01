@@ -38,3 +38,81 @@ The website has a handy UI that allows users to select a time frame of years to 
 Our data will allow us to explore some of the potential relationships discussed in the introduction. It is well known that correlation does not prove causation, but with well-made graphs we can inspect trends within the data. One question that we asked is "is there a relationship between ethnicity and drug overdose?". To answer this we can facet the overdose dataset by ethnicity and create graphs that display the death rates of different ethnicities next to one another. Another question we asked was "Does an increase in opioid abuse correspond to an increase in the national unemployment rate?". For this, we could superimpose a timeline of the unemployment rate over drug-related mortality rates for working-age groups. Last, we asked "do overdose rates correlate with the cost of healthcare?". To investigate this inquiry, we can use the healthcare spending database to show how much citizens must pay out of pocket for healthcare for a span of years, and compare it to fatal drug-abuse instances. Our general workflow will consist of asking a question, deciding which datasets will help answer that question, parse the datasets to extract relevant information, and finally generate a graph that will let us visualize a trend in the data. 
 
 ## Missing value analysis
+
+# Drug Overdose Deaths Dataset
+
+Download Dataset
+```{r}
+drug <- read.csv('Downloads/drug_overdose.csv')
+drug
+```
+
+From the graph below we can see that there is only one column that contains NA values. This column is called "ESTIMATE" and refers to the estimate of the number of deaths that occured due to drug overdose. There are around 1,100 NA values in this column out of a dataset that is around 6,200 rows. This is a significant number of NA values, but looking at why these NA values exist and exploring the other columns in the dataset that correspond to a NA value in ESTIMATE can help us understand why this number is high. 
+
+```{r}
+library(ggplot2)
+drug_na <- data.frame((colSums(is.na(drug))))
+drug_na$row_names <- row.names(drug_na)
+colnames(drug_na) <- c('na', 'column')
+ggplot(drug_na, aes(x=column, y=na)) + geom_bar(stat='identity', fill='cornflowerblue') + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + labs(x = 'Column', y='NA Values', title='NA values for each column- Drug Overdose Dataset') + geom_text(stat='identity', aes(label=na), vjust=-1, size=2) 
+```
+
+From the plot titled "NA Count Corresponding to Drug Overdose Deaths by Demographic" we can see that a little over 500 of the NA values in ESTIMATE correspond to a value in the 'STUB_NAME' column with value 'Sex and Age'. The STUB_NAME column gives us insight into the STUB_LABEL column and what demographic information is available for that row. As discussed earlier, the values in this column that correspond to a NA value in 'ESTIMATE' are represented in the data already. Therefore, even though the number of NA values for 'ESTIMATE' due to the 'Sex and Age' category looks high, the information has already been captured in the data previously. 
+
+Looking at the other graphs, we can see that the missing values in 'ESTIMATE' do not stem from a single year or a set of few years, they are distributed pretty evenly among the years. Therefore, we are not losing too much information from one year compared to the rest. Finally, from the Age and Drug Type graphs we can see that more of the missing values stem form the "All Ages" category and the "Heroin" and "Methadone" categories respectively. 
+
+It is important to emphasize that the NA values in the data will not corrupt the results of our exploration once the dataset is properly parsed and faceted.
+```{r}
+library(stringr)
+drug_na_sub <- drug[is.na(drug$ESTIMATE), ]
+
+ggplot(drug_na_sub, aes(drug_na_sub$AGE)) + geom_bar(fill='tan') + labs(x = 'Age', y='# of NA Values', title='NA Count Corresponding to Drug Overdose Deaths by Age') 
+
+ggplot(drug_na_sub, aes(drug_na_sub$STUB_NAME)) + geom_bar(fill='lightblue')+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+scale_x_discrete(labels=str_wrap(c("Age", "Sex and Age", 'Sex and Race', 'Sex and Race (single race)', 'Sex, race, hispanic origin', 'Sex, race, hispanic origin (single race)'), width=10)) + labs(x = 'Demographic Category Breakdown', y='# of NA Values', title='NA Count Corresponding to Drug Overdose Deaths by Demographic')
+
+ggplot(drug_na_sub, aes(drug_na_sub$YEAR)) + geom_bar(fill='salmon') + labs(x = 'Year', y='# of NA Values', title='NA Count Corresponding to Drug Overdose Deaths by Year')
+
+ggplot(drug_na_sub, aes(drug_na_sub$PANEL)) + geom_bar(fill='sienna') + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +scale_x_discrete(labels=str_wrap(c("All", "Opioid", 'Heroin', 'Methadone', 'Semisynthetic Opioids', 'Other synthetic opioids (Not including Methodone)'), width=10)) + labs(x = 'Drug Type', y='# of NA Values', title='NA Count Corresponding to Drug Overdose Deaths by Drug Type')
+
+```
+# National Health Expenditure Dataset
+Download the dataset and perform basic preprocessing to format the dataset in a usable manner. 
+```{r}
+library(dplyr)
+nhe <- read.csv('Downloads/NHE2021.csv')
+library(data.table)
+nhe <- transpose(nhe)
+nhe_new <- nhe
+colnames(nhe_new) <- nhe[1, ]
+nhe <- nhe_new
+nhe <- nhe[-1,]
+rownames(nhe) <- c(1960:2021) 
+nhe$Year <- rownames(nhe)
+nhe <- subset(nhe, Year > 1998 & Year < 2018)
+nhe <- nhe %>% select(c(1, 2, 4, 5, 6, 281, 282, 284, 285, 286))
+colnames(nhe) <- c('Total National Health Expenditures', 'Out of pocket', 'Private Health Insurance', 'Medicare', '          Medicaid (Title XIX)', 'Total Prescription Drug Expenditures', 'Out of pocket-Drug', 'Private Health Insurance-Drug',   'Medicare-Drug', 'Medicaid (Title XIX)-Drug' )
+nhe
+```
+In this graph, we plot the number of rows in each column in the dataset that are not NA. Each row in the graph corresponds to a year and because we are considering years 1999-2017 inclusive, there are 19 years. Therefore, this graph shows us that there are no missing values as they all have 19 rows. 
+```{r}
+nhe_na <- data.frame((colSums(!is.na(nhe))))
+nhe_na$row_names <- row.names(nhe_na)
+colnames(nhe_na) <- c('na', 'column')
+ggplot(nhe_na, aes(x=column, y=na)) + geom_bar(stat='identity', fill='cornflowerblue') + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + labs(x = 'Column', y='# of Values', title='Number of values in each column- NHE') + scale_x_discrete(labels=str_wrap(colnames(nhe), width=10)) + geom_text(stat='identity', aes(label=na), vjust=-1, size=2) 
+```
+
+#Unemployment Dataset
+Download the dataset and calculate the average unemployment rate per year from each month.
+```{r}
+unemployment <- read_csv("Downloads/unemployment.csv")
+annual <- rowMeans(unemployment[, 2:13], na.rm=T)
+unemployment$Annual <- annual
+```
+In this graph, we plot the number of rows in each column in the dataset that are not NA. Each row in the graph corresponds to a year and because we are considering years 1999-2017 inclusive, there are 19 years. Therefore, this graph shows us that there are no missing values as they all have 19 rows. 
+
+```{r}
+unemployment_na <- data.frame((colSums(!is.na(unemployment))))
+unemployment_na$row_names <- row.names(unemployment_na)
+colnames(unemployment_na) <- c('na', 'column')
+ggplot(unemployment_na, aes(x=column, y=na)) + geom_bar(stat='identity', fill='cornflowerblue') + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + labs(x = 'Column', y='# of Values', title='Number of values in each column- Unemployment') + scale_x_discrete(labels=str_wrap(colnames(unemployment), width=10)) + geom_text(stat='identity', aes(label=na), vjust=-1, size=2) 
+```
