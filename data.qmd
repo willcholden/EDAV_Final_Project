@@ -39,12 +39,11 @@ Our data will allow us to explore some of the potential relationships discussed 
 
 ## Missing value analysis
 
-# Drug Overdose Deaths Dataset
+### Drug Overdose Deaths Dataset
 
 Download Dataset
 ```{r}
-drug <- read.csv('Downloads/drug_overdose.csv')
-drug
+drug <- read.csv('~/Downloads/drug_overdose.csv')
 ```
 
 From the graph below we can see that there is only one column that contains NA values. This column is called "ESTIMATE" and refers to the estimate of the number of deaths that occured due to drug overdose. There are around 1,100 NA values in this column out of a dataset that is around 6,200 rows. This is a significant number of NA values, but looking at why these NA values exist and exploring the other columns in the dataset that correspond to a NA value in ESTIMATE can help us understand why this number is high. 
@@ -75,11 +74,12 @@ ggplot(drug_na_sub, aes(drug_na_sub$YEAR)) + geom_bar(fill='salmon') + labs(x = 
 ggplot(drug_na_sub, aes(drug_na_sub$PANEL)) + geom_bar(fill='sienna') + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +scale_x_discrete(labels=str_wrap(c("All", "Opioid", 'Heroin', 'Methadone', 'Semisynthetic Opioids', 'Other synthetic opioids (Not including Methodone)'), width=10)) + labs(x = 'Drug Type', y='# of NA Values', title='NA Count Corresponding to Drug Overdose Deaths by Drug Type')
 
 ```
-# National Health Expenditure Dataset
-Download the dataset and perform basic preprocessing to format the dataset in a usable manner. 
+### National Health Expenditure Dataset
+Download the dataset and perform basic preprocessing to format the dataset in a usable manner.
+
 ```{r}
 library(dplyr)
-nhe <- read.csv('Downloads/NHE2021.csv')
+nhe <- read.csv('~/Downloads/NHE2021.csv')
 library(data.table)
 nhe <- transpose(nhe)
 nhe_new <- nhe
@@ -91,7 +91,6 @@ nhe$Year <- rownames(nhe)
 nhe <- subset(nhe, Year > 1998 & Year < 2018)
 nhe <- nhe %>% select(c(1, 2, 4, 5, 6, 281, 282, 284, 285, 286))
 colnames(nhe) <- c('Total National Health Expenditures', 'Out of pocket', 'Private Health Insurance', 'Medicare', '          Medicaid (Title XIX)', 'Total Prescription Drug Expenditures', 'Out of pocket-Drug', 'Private Health Insurance-Drug',   'Medicare-Drug', 'Medicaid (Title XIX)-Drug' )
-nhe
 ```
 In this graph, we plot the number of rows in each column in the dataset that are not NA. Each row in the graph corresponds to a year and because we are considering years 1999-2017 inclusive, there are 19 years. Therefore, this graph shows us that there are no missing values as they all have 19 rows. 
 ```{r}
@@ -101,10 +100,10 @@ colnames(nhe_na) <- c('na', 'column')
 ggplot(nhe_na, aes(x=column, y=na)) + geom_bar(stat='identity', fill='cornflowerblue') + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + labs(x = 'Column', y='# of Values', title='Number of values in each column- NHE') + scale_x_discrete(labels=str_wrap(colnames(nhe), width=10)) + geom_text(stat='identity', aes(label=na), vjust=-1, size=2) 
 ```
 
-#Unemployment Dataset
+#### Unemployment Dataset
 Download the dataset and calculate the average unemployment rate per year from each month.
 ```{r}
-unemployment <- read_csv("Downloads/unemployment.csv")
+unemployment <- read.csv("~/Downloads/unemployment.csv")
 annual <- rowMeans(unemployment[, 2:13], na.rm=T)
 unemployment$Annual <- annual
 ```

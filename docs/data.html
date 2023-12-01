@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>YOUR PROJECT TITLE - 2&nbsp; Data</title>
+<title>Examining the Opioid Crisis - 2&nbsp; Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -89,7 +123,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">YOUR PROJECT TITLE</a> 
+      <a href="./">Examining the Opioid Crisis</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/willcholden/EDAV_Final_Project.git" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
@@ -142,8 +176,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#description" id="toc-description" class="nav-link active" data-scroll-target="#description"><span class="header-section-number">2.1</span> Description</a></li>
-  <li><a href="#missing-value-analysis" id="toc-missing-value-analysis" class="nav-link" data-scroll-target="#missing-value-analysis"><span class="header-section-number">2.2</span> Missing value analysis</a></li>
+  <li><a href="#description" id="toc-description" class="nav-link active" data-scroll-target="#description"><span class="header-section-number">2.1</span> Description</a>
+  <ul class="collapse">
+  <li><a href="#drug-overdose-death-rates" id="toc-drug-overdose-death-rates" class="nav-link" data-scroll-target="#drug-overdose-death-rates"><span class="header-section-number">2.1.1</span> Drug Overdose Death Rates</a></li>
+  <li><a href="#national-health-expenditure-accounts" id="toc-national-health-expenditure-accounts" class="nav-link" data-scroll-target="#national-health-expenditure-accounts"><span class="header-section-number">2.1.2</span> National Health Expenditure Accounts</a></li>
+  <li><a href="#unemployment-rate" id="toc-unemployment-rate" class="nav-link" data-scroll-target="#unemployment-rate"><span class="header-section-number">2.1.3</span> Unemployment Rate</a></li>
+  </ul></li>
+  <li><a href="#research-plan" id="toc-research-plan" class="nav-link" data-scroll-target="#research-plan"><span class="header-section-number">2.2</span> Research Plan</a></li>
+  <li><a href="#missing-value-analysis" id="toc-missing-value-analysis" class="nav-link" data-scroll-target="#missing-value-analysis"><span class="header-section-number">2.3</span> Missing value analysis</a>
+  <ul class="collapse">
+  <li><a href="#drug-overdose-deaths-dataset" id="toc-drug-overdose-deaths-dataset" class="nav-link" data-scroll-target="#drug-overdose-deaths-dataset"><span class="header-section-number">2.3.1</span> Drug Overdose Deaths Dataset</a></li>
+  <li><a href="#national-health-expenditure-dataset" id="toc-national-health-expenditure-dataset" class="nav-link" data-scroll-target="#national-health-expenditure-dataset"><span class="header-section-number">2.3.2</span> National Health Expenditure Dataset</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/willcholden/EDAV_Final_Project.git/edit/main/data.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/willcholden/EDAV_Final_Project.git/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -169,11 +213,177 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="description" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="description"><span class="header-section-number">2.1</span> Description</h2>
+<p>For this project we will be inspecting three separate databases.</p>
+<section id="drug-overdose-death-rates" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="drug-overdose-death-rates"><span class="header-section-number">2.1.1</span> Drug Overdose Death Rates</h3>
+<p>The first data source we will inspect is called “Drug overdose death rates, by drug type, sex, age, race, and Hispanic origin: United States”. This data set shows the rate of overdoses for different age groups, races, and genders from 1999 to 2019. This data set also breaks down the fatalities by drug type. These data are collected by the National Center for Health Statistics, which is part of the Centers for Disease Control and Prevention. It is an aggregate of public-use mortality files as well as U.S. Census Bureau national population estimates. The data are separated row by row for each demographic, year, and drug type. Each row represents a death rate. For instance, one row tells us that in the year 2017, about 1.6 out of every 100,000 females of American Indian or Alaskan Native descent died to a methodone overdose. This database was created in May, 2021 and was last updated in April, 2022. There are 6228 rows and 15 columns. One issue with this data set is that there are some redundancies. For example, there may be a row on death rates for black males and a separate row for black males (no Hispanic or Latino origin). This issue is easily resolved by faceting the data based on category breakdown. There are several ways to delineate categories, but the “STUB_NAME” column makes it easy to choose which category you would like to inspect (Age, Age and sex, Sex and race and Hispanic origin). By faceting using this column, no redundancies will corrupt the data. We accessed this data from the following web page- https://data.cdc.gov/NCHS/Drug-overdose-death-rates-by-drug-type-sex-age-rac/95ax-ymtc and downloaded the data set as a CSV file, which we then imported to RStudio.</p>
 </section>
-<section id="missing-value-analysis" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="missing-value-analysis"><span class="header-section-number">2.2</span> Missing value analysis</h2>
+<section id="national-health-expenditure-accounts" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="national-health-expenditure-accounts"><span class="header-section-number">2.1.2</span> National Health Expenditure Accounts</h3>
+<p>The second data source we inspect is called “National Health Expenditures by type of service and source of funds, CY 1960-2021”. This comprehensive dataset shows how much money is spent annually on healthcare, both by the government and by the population. It includes dozens of sources, but we are mainly interested in out of pocket, private health insurance, medicare, and medicaid. The purpose for including this data is to create visualizations that show potential relationships between healthcare spending and opioid abuse. Are people in need more likely to self-medicate if the government isn’t providing medical care? These data are collected by the Centers for Medicare &amp; Medicaid Services. The NHEA measures annual U.S. expenditures for health care goods and services, public health activities, government administration, the net cost of health insurance, and investment related to health care. The data are presented by type of service, sources of funding, and type of sponsor. This dataset is updated annually. There are 541 rows and 62 columns. An important feature of this data is that the values listed are scaled down 1:1,000,000 so each item must be multiplied by one million to equal its actual value. We accessed the data from the following CMS web page- https://www.cms.gov/data-research/statistics-trends-and-reports/national-health-expenditure-data/historical and downloaded the data set as a CSV file, which we then imported to RStudio.</p>
+</section>
+<section id="unemployment-rate" class="level3" data-number="2.1.3">
+<h3 data-number="2.1.3" class="anchored" data-anchor-id="unemployment-rate"><span class="header-section-number">2.1.3</span> Unemployment Rate</h3>
+<p>The third and final dataset is the national unemployment rate. This data set consists of a list of years and the corresponding rate of unemployment for each month. These data are collected by the U.S. Bureau of Labor Statistics through a nationwide survey for a random sample of the population. The database is updated monthly. There are 19 rows and 13 columns. We accessed this data from the Bureau of Labor Statistics from the following web page- https://data.bls.gov/pdq/SurveyOutputServlet The website has a handy UI that allows users to select a time frame of years to inspect and download. For our purposes, we selected 1999 to 2017 and exported the data as a XLSX file. The download included some extraneous titles and commends in the XLSX file, so we manually deleted those before importing the numerical data to RStudio.</p>
+</section>
+</section>
+<section id="research-plan" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="research-plan"><span class="header-section-number">2.2</span> Research Plan</h2>
+<p>Our data will allow us to explore some of the potential relationships discussed in the introduction. It is well known that correlation does not prove causation, but with well-made graphs we can inspect trends within the data. One question that we asked is “is there a relationship between ethnicity and drug overdose?”. To answer this we can facet the overdose dataset by ethnicity and create graphs that display the death rates of different ethnicities next to one another. Another question we asked was “Does an increase in opioid abuse correspond to an increase in the national unemployment rate?”. For this, we could superimpose a timeline of the unemployment rate over drug-related mortality rates for working-age groups. Last, we asked “do overdose rates correlate with the cost of healthcare?”. To investigate this inquiry, we can use the healthcare spending database to show how much citizens must pay out of pocket for healthcare for a span of years, and compare it to fatal drug-abuse instances. Our general workflow will consist of asking a question, deciding which datasets will help answer that question, parse the datasets to extract relevant information, and finally generate a graph that will let us visualize a trend in the data.</p>
+</section>
+<section id="missing-value-analysis" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="missing-value-analysis"><span class="header-section-number">2.3</span> Missing value analysis</h2>
+<section id="drug-overdose-deaths-dataset" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="drug-overdose-deaths-dataset"><span class="header-section-number">2.3.1</span> Drug Overdose Deaths Dataset</h3>
+<p>Download Dataset</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>drug <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">'~/Downloads/drug_overdose.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>From the graph below we can see that there is only one column that contains NA values. This column is called “ESTIMATE” and refers to the estimate of the number of deaths that occured due to drug overdose. There are around 1,100 NA values in this column out of a dataset that is around 6,200 rows. This is a significant number of NA values, but looking at why these NA values exist and exploring the other columns in the dataset that correspond to a NA value in ESTIMATE can help us understand why this number is high.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>drug_na <span class="ot">&lt;-</span> <span class="fu">data.frame</span>((<span class="fu">colSums</span>(<span class="fu">is.na</span>(drug))))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>drug_na<span class="sc">$</span>row_names <span class="ot">&lt;-</span> <span class="fu">row.names</span>(drug_na)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(drug_na) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'na'</span>, <span class="st">'column'</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(drug_na, <span class="fu">aes</span>(<span class="at">x=</span>column, <span class="at">y=</span>na)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">'identity'</span>, <span class="at">fill=</span><span class="st">'cornflowerblue'</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Column'</span>, <span class="at">y=</span><span class="st">'NA Values'</span>, <span class="at">title=</span><span class="st">'NA values for each column- Drug Overdose Dataset'</span>) <span class="sc">+</span> <span class="fu">geom_text</span>(<span class="at">stat=</span><span class="st">'identity'</span>, <span class="fu">aes</span>(<span class="at">label=</span>na), <span class="at">vjust=</span><span class="sc">-</span><span class="dv">1</span>, <span class="at">size=</span><span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>From the plot titled “NA Count Corresponding to Drug Overdose Deaths by Demographic” we can see that a little over 500 of the NA values in ESTIMATE correspond to a value in the ‘STUB_NAME’ column with value ‘Sex and Age’. The STUB_NAME column gives us insight into the STUB_LABEL column and what demographic information is available for that row. As discussed earlier, the values in this column that correspond to a NA value in ‘ESTIMATE’ are represented in the data already. Therefore, even though the number of NA values for ‘ESTIMATE’ due to the ‘Sex and Age’ category looks high, the information has already been captured in the data previously.</p>
+<p>Looking at the other graphs, we can see that the missing values in ‘ESTIMATE’ do not stem from a single year or a set of few years, they are distributed pretty evenly among the years. Therefore, we are not losing too much information from one year compared to the rest. Finally, from the Age and Drug Type graphs we can see that more of the missing values stem form the “All Ages” category and the “Heroin” and “Methadone” categories respectively.</p>
+<p>It is important to emphasize that the NA values in the data will not corrupt the results of our exploration once the dataset is properly parsed and faceted.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>drug_na_sub <span class="ot">&lt;-</span> drug[<span class="fu">is.na</span>(drug<span class="sc">$</span>ESTIMATE), ]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(drug_na_sub, <span class="fu">aes</span>(drug_na_sub<span class="sc">$</span>AGE)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">fill=</span><span class="st">'tan'</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Age'</span>, <span class="at">y=</span><span class="st">'# of NA Values'</span>, <span class="at">title=</span><span class="st">'NA Count Corresponding to Drug Overdose Deaths by Age'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(drug_na_sub, <span class="fu">aes</span>(drug_na_sub<span class="sc">$</span>STUB_NAME)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">fill=</span><span class="st">'lightblue'</span>)<span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>))<span class="sc">+</span><span class="fu">scale_x_discrete</span>(<span class="at">labels=</span><span class="fu">str_wrap</span>(<span class="fu">c</span>(<span class="st">"Age"</span>, <span class="st">"Sex and Age"</span>, <span class="st">'Sex and Race'</span>, <span class="st">'Sex and Race (single race)'</span>, <span class="st">'Sex, race, hispanic origin'</span>, <span class="st">'Sex, race, hispanic origin (single race)'</span>), <span class="at">width=</span><span class="dv">10</span>)) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Demographic Category Breakdown'</span>, <span class="at">y=</span><span class="st">'# of NA Values'</span>, <span class="at">title=</span><span class="st">'NA Count Corresponding to Drug Overdose Deaths by Demographic'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(drug_na_sub, <span class="fu">aes</span>(drug_na_sub<span class="sc">$</span>YEAR)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">fill=</span><span class="st">'salmon'</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Year'</span>, <span class="at">y=</span><span class="st">'# of NA Values'</span>, <span class="at">title=</span><span class="st">'NA Count Corresponding to Drug Overdose Deaths by Year'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(drug_na_sub, <span class="fu">aes</span>(drug_na_sub<span class="sc">$</span>PANEL)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">fill=</span><span class="st">'sienna'</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span><span class="fu">scale_x_discrete</span>(<span class="at">labels=</span><span class="fu">str_wrap</span>(<span class="fu">c</span>(<span class="st">"All"</span>, <span class="st">"Opioid"</span>, <span class="st">'Heroin'</span>, <span class="st">'Methadone'</span>, <span class="st">'Semisynthetic Opioids'</span>, <span class="st">'Other synthetic opioids (Not including Methodone)'</span>), <span class="at">width=</span><span class="dv">10</span>)) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Drug Type'</span>, <span class="at">y=</span><span class="st">'# of NA Values'</span>, <span class="at">title=</span><span class="st">'NA Count Corresponding to Drug Overdose Deaths by Drug Type'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-3-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="national-health-expenditure-dataset" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="national-health-expenditure-dataset"><span class="header-section-number">2.3.2</span> National Health Expenditure Dataset</h3>
+<p>Download the dataset and perform basic preprocessing to format the dataset in a usable manner.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>nhe <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">'~/Downloads/NHE2021.csv'</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'data.table'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:dplyr':
+
+    between, first, last</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>nhe <span class="ot">&lt;-</span> <span class="fu">transpose</span>(nhe)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>nhe_new <span class="ot">&lt;-</span> nhe</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(nhe_new) <span class="ot">&lt;-</span> nhe[<span class="dv">1</span>, ]</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>nhe <span class="ot">&lt;-</span> nhe_new</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>nhe <span class="ot">&lt;-</span> nhe[<span class="sc">-</span><span class="dv">1</span>,]</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(nhe) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1960</span><span class="sc">:</span><span class="dv">2021</span>) </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>nhe<span class="sc">$</span>Year <span class="ot">&lt;-</span> <span class="fu">rownames</span>(nhe)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>nhe <span class="ot">&lt;-</span> <span class="fu">subset</span>(nhe, Year <span class="sc">&gt;</span> <span class="dv">1998</span> <span class="sc">&amp;</span> Year <span class="sc">&lt;</span> <span class="dv">2018</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>nhe <span class="ot">&lt;-</span> nhe <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">281</span>, <span class="dv">282</span>, <span class="dv">284</span>, <span class="dv">285</span>, <span class="dv">286</span>))</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(nhe) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'Total National Health Expenditures'</span>, <span class="st">'Out of pocket'</span>, <span class="st">'Private Health Insurance'</span>, <span class="st">'Medicare'</span>, <span class="st">'          Medicaid (Title XIX)'</span>, <span class="st">'Total Prescription Drug Expenditures'</span>, <span class="st">'Out of pocket-Drug'</span>, <span class="st">'Private Health Insurance-Drug'</span>,   <span class="st">'Medicare-Drug'</span>, <span class="st">'Medicaid (Title XIX)-Drug'</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>In this graph, we plot the number of rows in each column in the dataset that are not NA. Each row in the graph corresponds to a year and because we are considering years 1999-2017 inclusive, there are 19 years. Therefore, this graph shows us that there are no missing values as they all have 19 rows.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>nhe_na <span class="ot">&lt;-</span> <span class="fu">data.frame</span>((<span class="fu">colSums</span>(<span class="sc">!</span><span class="fu">is.na</span>(nhe))))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>nhe_na<span class="sc">$</span>row_names <span class="ot">&lt;-</span> <span class="fu">row.names</span>(nhe_na)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(nhe_na) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'na'</span>, <span class="st">'column'</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(nhe_na, <span class="fu">aes</span>(<span class="at">x=</span>column, <span class="at">y=</span>na)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">'identity'</span>, <span class="at">fill=</span><span class="st">'cornflowerblue'</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Column'</span>, <span class="at">y=</span><span class="st">'# of Values'</span>, <span class="at">title=</span><span class="st">'Number of values in each column- NHE'</span>) <span class="sc">+</span> <span class="fu">scale_x_discrete</span>(<span class="at">labels=</span><span class="fu">str_wrap</span>(<span class="fu">colnames</span>(nhe), <span class="at">width=</span><span class="dv">10</span>)) <span class="sc">+</span> <span class="fu">geom_text</span>(<span class="at">stat=</span><span class="st">'identity'</span>, <span class="fu">aes</span>(<span class="at">label=</span>na), <span class="at">vjust=</span><span class="sc">-</span><span class="dv">1</span>, <span class="at">size=</span><span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="unemployment-dataset" class="level4" data-number="2.3.2.1">
+<h4 data-number="2.3.2.1" class="anchored" data-anchor-id="unemployment-dataset"><span class="header-section-number">2.3.2.1</span> Unemployment Dataset</h4>
+<p>Download the dataset and calculate the average unemployment rate per year from each month.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>unemployment <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Downloads/unemployment.csv"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>annual <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(unemployment[, <span class="dv">2</span><span class="sc">:</span><span class="dv">13</span>], <span class="at">na.rm=</span>T)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>unemployment<span class="sc">$</span>Annual <span class="ot">&lt;-</span> annual</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>In this graph, we plot the number of rows in each column in the dataset that are not NA. Each row in the graph corresponds to a year and because we are considering years 1999-2017 inclusive, there are 19 years. Therefore, this graph shows us that there are no missing values as they all have 19 rows.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>unemployment_na <span class="ot">&lt;-</span> <span class="fu">data.frame</span>((<span class="fu">colSums</span>(<span class="sc">!</span><span class="fu">is.na</span>(unemployment))))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>unemployment_na<span class="sc">$</span>row_names <span class="ot">&lt;-</span> <span class="fu">row.names</span>(unemployment_na)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(unemployment_na) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'na'</span>, <span class="st">'column'</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(unemployment_na, <span class="fu">aes</span>(<span class="at">x=</span>column, <span class="at">y=</span>na)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">'identity'</span>, <span class="at">fill=</span><span class="st">'cornflowerblue'</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Column'</span>, <span class="at">y=</span><span class="st">'# of Values'</span>, <span class="at">title=</span><span class="st">'Number of values in each column- Unemployment'</span>) <span class="sc">+</span> <span class="fu">scale_x_discrete</span>(<span class="at">labels=</span><span class="fu">str_wrap</span>(<span class="fu">colnames</span>(unemployment), <span class="at">width=</span><span class="dv">10</span>)) <span class="sc">+</span> <span class="fu">geom_text</span>(<span class="at">stat=</span><span class="st">'identity'</span>, <span class="fu">aes</span>(<span class="at">label=</span>na), <span class="at">vjust=</span><span class="sc">-</span><span class="dv">1</span>, <span class="at">size=</span><span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
