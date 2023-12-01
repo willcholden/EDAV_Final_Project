@@ -78,9 +78,9 @@ ggplot(drug_na_sub, aes(drug_na_sub$PANEL)) + geom_bar(fill='sienna') + theme(ax
 Download the dataset and perform basic preprocessing to format the dataset in a usable manner.
 
 ```{r}
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
 nhe <- read.csv('~/Downloads/NHE2021.csv')
-library(data.table)
+library(data.table, warn.conflicts = FALSE)
 nhe <- transpose(nhe)
 nhe_new <- nhe
 colnames(nhe_new) <- nhe[1, ]
