@@ -98,7 +98,7 @@ colnames(nhe_na) <- c('na', 'column')
 ggplot(nhe_na, aes(x=column, y=na)) + geom_bar(stat='identity', fill='cornflowerblue') + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + labs(x = 'Column', y='# of Values', title='Number of values in each column- NHE') + scale_x_discrete(labels=str_wrap(colnames(nhe), width=10)) + geom_text(stat='identity', aes(label=na), vjust=-1, size=2) 
 ```
 
-#### Unemployment Dataset
+### Unemployment Dataset
 Download the dataset and calculate the average unemployment rate per year from each month.
 ```{r}
 unemployment <- read.csv("~/Downloads/unemployment.csv")
