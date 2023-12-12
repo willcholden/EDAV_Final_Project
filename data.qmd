@@ -43,7 +43,7 @@ Our data will allow us to explore some of the potential relationships discussed 
 
 Download Dataset
 ```{r}
-drug <- read.csv('Downloads/drug_overdose.csv')
+drug <- read_csv('/Users/keerthisri/Downloads/drug_overdose.csv')
 drug
 ```
 
@@ -79,7 +79,7 @@ ggplot(drug_na_sub, aes(drug_na_sub$PANEL)) + geom_bar(fill='sienna') + theme(ax
 Download the dataset and perform basic preprocessing to format the dataset in a usable manner. 
 ```{r}
 library(dplyr)
-nhe <- read.csv('Downloads/NHE2021.csv')
+nhe <- read.csv('/Users/keerthisri/Downloads/NHE2021.csv')
 library(data.table)
 nhe <- transpose(nhe)
 nhe_new <- nhe
@@ -104,7 +104,7 @@ ggplot(nhe_na, aes(x=column, y=na)) + geom_bar(stat='identity', fill='cornflower
 #Unemployment Dataset
 Download the dataset and calculate the average unemployment rate per year from each month.
 ```{r}
-unemployment <- read_csv("Downloads/unemployment.csv")
+unemployment <- read_csv("/Users/keerthisri/Downloads/unemployment.csv")
 annual <- rowMeans(unemployment[, 2:13], na.rm=T)
 unemployment$Annual <- annual
 ```
