@@ -1,1 +1,26 @@
 # Results
+
+```{r}
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+drug <- read.csv('~/Downloads/drug_overdose.csv')
+drug_total <- drug[ which(drug$STUB_NAME=='Total'& drug$UNIT == 'Deaths per 100,000 resident population, age-adjusted' & drug$PANEL_NUM != 0), ]
+drug_total <- drug_total[c("PANEL_NUM", "ESTIMATE", "YEAR")]
+
+drug_total <- drug_total %>%
+  mutate(PANEL= case_when(
+    PANEL_NUM==1 ~ "Total",
+    PANEL_NUM==2 ~ "Natural or Semisynthetic",
+    PANEL_NUM==3 ~ "Methadone",
+    PANEL_NUM==4 ~ "Other Synthetic",
+    PANEL_NUM==5 ~ "Heroin"
+    ))
+drug_total$PANEL <- factor(drug_total$PANEL, levels = c("Total", "Natural or Semisynthetic", "Methadone", "Other Synthetic", "Heroin"))
+
+ggplot(drug_total, aes(x=YEAR, y=ESTIMATE, group=PANEL)) +
+  geom_line()
+
+
+```
