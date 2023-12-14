@@ -2,7 +2,7 @@
 
 ## Description
 
-For this project we will be inspecting three separate databases.
+For this project we will be inspecting four separate databases.
 
 ### Drug Overdose Death Rates
 The first data source we will inspect is called "Drug overdose death rates, by drug type, sex, age, race, and Hispanic origin: United States". This data set shows the rate of overdoses for different age groups, races, and genders from 1999 to 2017. This data set also breaks down the fatalities by drug type. 
@@ -25,12 +25,22 @@ https://www.cms.gov/data-research/statistics-trends-and-reports/national-health-
 and downloaded the data set as a CSV file, which we then imported to RStudio.
 
 ### Unemployment Rate
-The third and final dataset is the national unemployment rate. This data set consists of a list of years and the corresponding rate of unemployment for each month. 
+The third dataset used is the national unemployment rate. This data set consists of a list of years and the corresponding rate of unemployment for each month. 
 These data are collected by the U.S. Bureau of Labor Statistics through a nationwide survey for a random sample of the population. 
 The database is updated monthly. 
 There are 19 rows and 13 columns. 
 We accessed this data from the Bureau of Labor Statistics from the following web page- https://data.bls.gov/pdq/SurveyOutputServlet. 
 The website has a handy UI that allows users to select a time frame of years to inspect and download. For our purposes, we selected 1999 to 2017 and exported the data as a XLSX file. The download included some extraneous titles and comments in the XLSX file, so we manually deleted those before importing the numerical data to RStudio. 
+
+### US Population Database
+The fourth and final dataset used is the national population. This data consists of the population of the United States for the 19 years spanning from 1999 to 2017. 
+These data were collected by the Federal Reserve Bank of St. Louis, FRED from the World Bank. 
+This Data is collected annually. 
+There are 19 rows and 2 columns.
+We accessed this data from FRED via the following web page-
+https://fred.stlouisfed.org/series/POPTOTUSA647NWDB
+This site lets the user select the years they are interested in and download only that information. From this site, we downloaded the data as a CSV file. 
+
 
 ## Research Plan
 Our data will allow us to explore some of the potential relationships discussed in the introduction. It is well known that correlation does not prove causation, but with well-made graphs we can inspect trends within the data. One question that we asked is "is there a relationship between ethnicity and drug overdose?". To answer this we can facet the overdose dataset by ethnicity and create graphs that display the death rates of different ethnicities next to one another. Another question we asked was "Does an increase in opioid abuse correspond to an increase in the national unemployment rate?". For this, we could superimpose a timeline of the unemployment rate over drug-related mortality rates for working-age groups. Last, we asked "do overdose rates correlate with the cost of healthcare?". To investigate this inquiry, we can use the healthcare spending database to show how much citizens must pay out of pocket for healthcare for a span of years, and compare it to fatal drug-abuse instances. Our general workflow will consist of asking a question, deciding which datasets will help answer that question, parse the datasets to extract relevant information, and finally generate a graph that will let us visualize a trend in the data. 
