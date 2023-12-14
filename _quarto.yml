@@ -6,7 +6,7 @@ execute:
   echo: true
 
 book:
-  title: "YOUR PROJECT TITLE"
+  title: "Examining the Opioid Crisis"
   author:
     - Keerthi Srilakshmidaran (ks4212)
     - William Holden (wch2123)

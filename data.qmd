@@ -5,7 +5,7 @@
 For this project we will be inspecting three separate databases.
 
 ### Drug Overdose Death Rates
-The first data source we will inspect is called "Drug overdose death rates, by drug type, sex, age, race, and Hispanic origin: United States". This data set shows the rate of overdoses for different age groups, races, and genders from 1999 to 2019. This data set also breaks down the fatalities by drug type. 
+The first data source we will inspect is called "Drug overdose death rates, by drug type, sex, age, race, and Hispanic origin: United States". This data set shows the rate of overdoses for different age groups, races, and genders from 1999 to 2017. This data set also breaks down the fatalities by drug type. 
 These data are collected by the National Center for Health Statistics, which is part of the Centers for Disease Control and Prevention. It is an aggregate of public-use mortality files as well as U.S. Census Bureau national population estimates. 
 The data are separated row by row for each demographic, year, and drug type. Each row represents a death rate. For instance, one row tells us that in the year 2017, about 1.6 out of every 100,000 females of American Indian or Alaskan Native descent died to a methodone overdose. 
 This database was created in May, 2021 and was last updated in April, 2022. 
@@ -16,9 +16,7 @@ https://data.cdc.gov/NCHS/Drug-overdose-death-rates-by-drug-type-sex-age-rac/95a
 and downloaded the data set as a CSV file, which we then imported to RStudio. 
 
 ### National Health Expenditure Accounts 
-The second data source we inspect is called "National Health Expenditures by type of service and source of funds, CY 1960-2021". This comprehensive dataset shows how much money is spent annually on healthcare, both by the government and by the population. It includes dozens of sources, but we are mainly interested in out of pocket, private health insurance, medicare, and medicaid. The purpose for including this data is to create visualizations that show potential relationships between healthcare spending and opioid abuse. Are people in need more likely to self-medicate if the government isn't providing medical care? 
-These data are collected by the Centers for Medicare & Medicaid Services. 
-The NHEA measures annual U.S. expenditures for health care goods and services, public health activities, government administration, the net cost of health insurance, and investment related to health care. The data are presented by type of service, sources of funding, and type of sponsor.
+The second data source we inspect is called "National Health Expenditures by type of service and source of funds, CY 1960-2021". This comprehensive dataset shows how much money is spent annually on healthcare, both by the government and by the population. It includes dozens of sources, but we are mainly interested in out of pocket, private health insurance, medicare, and medicaid. These data are collected by the Centers for Medicare & Medicaid Services. The NHEA measures annual U.S. expenditures for health care goods and services, public health activities, government administration, the net cost of health insurance, and investment related to health care. The data are presented by type of service, sources of funding, and type of sponsor. The purpose for including this data is to create visualizations that show potential relationships between healthcare spending and opioid abuse. Are people in need more likely to self-medicate if the government isn't providing medical care? 
 This dataset is updated annually. 
 There are 541 rows and 62 columns. 
 An important feature of this data is that the values listed are scaled down 1:1,000,000 so each item must be multiplied by one million to equal its actual value. 
@@ -31,20 +29,24 @@ The third and final dataset is the national unemployment rate. This data set con
 These data are collected by the U.S. Bureau of Labor Statistics through a nationwide survey for a random sample of the population. 
 The database is updated monthly. 
 There are 19 rows and 13 columns. 
-We accessed this data from the Bureau of Labor Statistics from the following web page- https://data.bls.gov/pdq/SurveyOutputServlet
-The website has a handy UI that allows users to select a time frame of years to inspect and download. For our purposes, we selected 1999 to 2017 and exported the data as a XLSX file. The download included some extraneous titles and commends in the XLSX file, so we manually deleted those before importing the numerical data to RStudio. 
+We accessed this data from the Bureau of Labor Statistics from the following web page- https://data.bls.gov/pdq/SurveyOutputServlet. 
+The website has a handy UI that allows users to select a time frame of years to inspect and download. For our purposes, we selected 1999 to 2017 and exported the data as a XLSX file. The download included some extraneous titles and comments in the XLSX file, so we manually deleted those before importing the numerical data to RStudio. 
 
 ## Research Plan
 Our data will allow us to explore some of the potential relationships discussed in the introduction. It is well known that correlation does not prove causation, but with well-made graphs we can inspect trends within the data. One question that we asked is "is there a relationship between ethnicity and drug overdose?". To answer this we can facet the overdose dataset by ethnicity and create graphs that display the death rates of different ethnicities next to one another. Another question we asked was "Does an increase in opioid abuse correspond to an increase in the national unemployment rate?". For this, we could superimpose a timeline of the unemployment rate over drug-related mortality rates for working-age groups. Last, we asked "do overdose rates correlate with the cost of healthcare?". To investigate this inquiry, we can use the healthcare spending database to show how much citizens must pay out of pocket for healthcare for a span of years, and compare it to fatal drug-abuse instances. Our general workflow will consist of asking a question, deciding which datasets will help answer that question, parse the datasets to extract relevant information, and finally generate a graph that will let us visualize a trend in the data. 
 
 ## Missing value analysis
 
-# Drug Overdose Deaths Dataset
+### Drug Overdose Deaths Dataset
 
 Download Dataset
 ```{r}
+<<<<<<< HEAD
 drug <- read_csv('/Users/keerthisri/Downloads/drug_overdose.csv')
 drug
+=======
+drug <- read.csv('~/Downloads/drug_overdose.csv')
+>>>>>>> 
 ```
 
 From the graph below we can see that there is only one column that contains NA values. This column is called "ESTIMATE" and refers to the estimate of the number of deaths that occured due to drug overdose. There are around 1,100 NA values in this column out of a dataset that is around 6,200 rows. This is a significant number of NA values, but looking at why these NA values exist and exploring the other columns in the dataset that correspond to a NA value in ESTIMATE can help us understand why this number is high. 
@@ -59,7 +61,7 @@ ggplot(drug_na, aes(x=column, y=na)) + geom_bar(stat='identity', fill='cornflowe
 
 From the plot titled "NA Count Corresponding to Drug Overdose Deaths by Demographic" we can see that a little over 500 of the NA values in ESTIMATE correspond to a value in the 'STUB_NAME' column with value 'Sex and Age'. The STUB_NAME column gives us insight into the STUB_LABEL column and what demographic information is available for that row. As discussed earlier, the values in this column that correspond to a NA value in 'ESTIMATE' are represented in the data already. Therefore, even though the number of NA values for 'ESTIMATE' due to the 'Sex and Age' category looks high, the information has already been captured in the data previously. 
 
-Looking at the other graphs, we can see that the missing values in 'ESTIMATE' do not stem from a single year or a set of few years, they are distributed pretty evenly among the years. Therefore, we are not losing too much information from one year compared to the rest. Finally, from the Age and Drug Type graphs we can see that more of the missing values stem form the "All Ages" category and the "Heroin" and "Methadone" categories respectively. 
+Looking at the other graphs, we can see that the missing values in 'ESTIMATE' do not stem from a single year or a set of few years, they are distributed fairly evenly among the years. Therefore, we are not losing too much information from one year compared to the rest. Finally, from the Age and Drug Type graphs we can see that more of the missing values stem form the "All Ages" category and the "Heroin" and "Methadone" categories respectively. 
 
 It is important to emphasize that the NA values in the data will not corrupt the results of our exploration once the dataset is properly parsed and faceted.
 ```{r}
@@ -75,12 +77,19 @@ ggplot(drug_na_sub, aes(drug_na_sub$YEAR)) + geom_bar(fill='salmon') + labs(x = 
 ggplot(drug_na_sub, aes(drug_na_sub$PANEL)) + geom_bar(fill='sienna') + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +scale_x_discrete(labels=str_wrap(c("All", "Opioid", 'Heroin', 'Methadone', 'Semisynthetic Opioids', 'Other synthetic opioids (Not including Methodone)'), width=10)) + labs(x = 'Drug Type', y='# of NA Values', title='NA Count Corresponding to Drug Overdose Deaths by Drug Type')
 
 ```
-# National Health Expenditure Dataset
-Download the dataset and perform basic preprocessing to format the dataset in a usable manner. 
+### National Health Expenditure Dataset
+Download the dataset and perform basic preprocessing to format the dataset in a usable manner.
+
 ```{r}
+<<<<<<< HEAD
 library(dplyr)
 nhe <- read.csv('/Users/keerthisri/Downloads/NHE2021.csv')
 library(data.table)
+=======
+library(dplyr, warn.conflicts = FALSE)
+nhe <- read.csv('~/Downloads/NHE2021.csv')
+library(data.table, warn.conflicts = FALSE)
+>>>>>>> 1debe666b632d8eec32dbd1f2e6f8ea72942714f
 nhe <- transpose(nhe)
 nhe_new <- nhe
 colnames(nhe_new) <- nhe[1, ]
@@ -91,7 +100,6 @@ nhe$Year <- rownames(nhe)
 nhe <- subset(nhe, Year > 1998 & Year < 2018)
 nhe <- nhe %>% select(c(1, 2, 4, 5, 6, 281, 282, 284, 285, 286))
 colnames(nhe) <- c('Total National Health Expenditures', 'Out of pocket', 'Private Health Insurance', 'Medicare', '          Medicaid (Title XIX)', 'Total Prescription Drug Expenditures', 'Out of pocket-Drug', 'Private Health Insurance-Drug',   'Medicare-Drug', 'Medicaid (Title XIX)-Drug' )
-nhe
 ```
 In this graph, we plot the number of rows in each column in the dataset that are not NA. Each row in the graph corresponds to a year and because we are considering years 1999-2017 inclusive, there are 19 years. Therefore, this graph shows us that there are no missing values as they all have 19 rows. 
 ```{r}
@@ -101,10 +109,14 @@ colnames(nhe_na) <- c('na', 'column')
 ggplot(nhe_na, aes(x=column, y=na)) + geom_bar(stat='identity', fill='cornflowerblue') + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + labs(x = 'Column', y='# of Values', title='Number of values in each column- NHE') + scale_x_discrete(labels=str_wrap(colnames(nhe), width=10)) + geom_text(stat='identity', aes(label=na), vjust=-1, size=2) 
 ```
 
-#Unemployment Dataset
+### Unemployment Dataset
 Download the dataset and calculate the average unemployment rate per year from each month.
 ```{r}
+<<<<<<< HEAD
 unemployment <- read_csv("/Users/keerthisri/Downloads/unemployment.csv")
+=======
+unemployment <- read.csv("~/Downloads/unemployment.csv")
+>>>>>>> 1debe666b632d8eec32dbd1f2e6f8ea72942714f
 annual <- rowMeans(unemployment[, 2:13], na.rm=T)
 unemployment$Annual <- annual
 ```

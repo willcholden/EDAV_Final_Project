@@ -1,0 +1,187 @@
+---
+title: "EDAV_Final"
+author: "Keerthi Srilakshmidaran"
+date: "12/12/2023"
+output: html_document
+---
+
+```{r}
+drug <- read.csv('/Users/keerthisri/Downloads/drug_overdose.csv')
+drug
+```
+
+```{r}
+drug_sr <- drug[which(drug$STUB_NAME == 'Sex and race'), ] 
+drug_sr <- drug_sr %>%
+  separate(STUB_LABEL, into = c("Sex", "Race"), sep = ":\\s", remove = FALSE)
+drug_sr$PANEL <- factor(drug_sr$PANEL)
+drug_sr <- drug_sr %>% drop_na()
+```
+
+```{r}
+drug_sr1 <- drug_sr %>% 
+  group_by(Sex, Race, YEAR) %>% 
+  summarize(m = mean(ESTIMATE)) %>% 
+  ungroup()
+drug_sr1$estimate_cut = cut(drug_sr1$m,breaks = seq(0, 14,by=3.5))
+drug_sr1 <- drug_sr1 %>% 
+  mutate(estimate_cut = case_when(estimate_cut == '(0,3.5]'  ~ "LOW (0,3.5]", estimate_cut == '(3.5,7]' ~ "MID (3.5,7]", estimate_cut == '(7,10.5]'  ~ "HIGH (7,10.5]", estimate_cut == '(10.5,14]'  ~ "VERY HIGH (7,10.5]" ))
+drug_sr1$estimate_cut <- factor(drug_sr1$estimate_cut, levels = c("LOW (0,3.5]", "MID (3.5,7]", "HIGH (7,10.5]","VERY HIGH (7,10.5]"))
+drug_sr1
+```
+
+```{r}
+library(ggalluvial)
+ggplot(data = drug_sr1,
+       aes(axis1 = Sex,   
+           axis2 = Race,
+           axis3 = estimate_cut, y = m)) +
+  geom_alluvium(aes(fill=estimate_cut)) +
+  geom_stratum() +
+  geom_label(stat = "stratum", aes(label=after_stat(stratum)), fontface = "bold", size = 1.5) +
+  scale_x_discrete(limits = c("Sex", "Race", "Overdose Level"),
+                   expand = c(0.15, 0.05)) + 
+  ggtitle("Overdose Ranges by Sex and Race", sub = "Over Years 1999-2017") + ylab("") +
+  theme(legend.title = element_text(size = 6), legend.text = element_text(size = 6)) +
+  theme(plot.title = element_text(face = "bold", size = 12)) +
+  theme(plot.subtitle = element_text(face = "bold", color = "grey35", size=10)) + guides(color=guide_legend(title="Drug Type"))
+```
+
+```{r}
+drug_sr2 <- drug_sr %>% 
+  group_by(Sex, Race, PANEL) %>% 
+  summarize(m = mean(ESTIMATE)) %>% 
+  ungroup()
+drug_sr2$estimate_cut = cut(drug_sr2$m,breaks = seq(0, 18,by=4.5))
+colnames(drug_sr2)[3] ="PANELS"
+drug_sr2$PANELS <- factor(drug_sr2$PANELS, levels = c("All drug overdose deaths", 
+                                                      "Drug overdose deaths involving any opioid", 
+                                                      "Drug overdose deaths involving heroin", 
+                                                      "Drug overdose deaths involving methadone", 
+                            "Drug overdose deaths involving natural and semisynthetic opioids", 
+                            "Drug overdose deaths involving other synthetic opioids (other than methadone)"), 
+                          labels = c("All", "Opioid", "Heroin", 
+                                     "Methadone", "Natural/Semisynthetic Opioids", 
+                                     "Other Synthetic Opioids"))
+drug_sr2
+```
+
+
+```{r}
+drug_sr2$Sex_Race <- paste(drug_sr2$Sex, drug_sr2$Race, sep = ", ")
+drug_sr2 <- subset(drug_sr2, PANELS != 'All')
+dotplot <- ggplot(drug_sr2, aes(m, Sex_Race, color = PANELS)) +
+  geom_point() +
+  ggtitle("Overdose Death Rate by Sex & Race for Each Drug Type", 
+          sub = "Averaged Over Years 1999-2018") + ylab("") + xlab('Average Overdose Death Rate') +
+  scale_x_continuous(breaks = seq(0, 20, by = 4)) 
+dotplot <- dotplot + guides(shape = guide_legend(override.aes = list(size = 0.9)))
+dotplot <- dotplot + guides(shape = guide_legend(override.aes = list(size = 0.9)))
+dotplot <- dotplot + theme(legend.title = element_text(size = 8), 
+               legend.text = element_text(size = 6))  +
+  theme(plot.title = element_text(face = "bold", size = 12)) +
+  theme(plot.subtitle = element_text(face = "bold", color = "grey35", size=10)) +
+  theme(plot.caption = element_text(color = "grey68"))
+dotplot <- dotplot + guides(color=guide_legend(title="Drug Type"))
+dotplot
+```
+
+```{r}
+drug_age <- drug %>% drop_na()
+colnames(drug_age)[2] ="PANELS"
+drug_age <- subset(drug_age, PANELS != 'All drug overdose deaths')
+drug_age <- drug_age %>% 
+  group_by(AGE, PANELS) %>% 
+  summarize(m = mean(ESTIMATE)) %>% 
+  ungroup()
+drug_age$PANELS <- factor(drug_age$PANELS, levels = c( "Drug overdose deaths involving any opioid", 
+                                                      "Drug overdose deaths involving heroin", 
+                                                      "Drug overdose deaths involving methadone", 
+                            "Drug overdose deaths involving natural and semisynthetic opioids", 
+                            "Drug overdose deaths involving other synthetic opioids (other than methadone)"), 
+                          labels = c("Opioid", "Heroin", 
+                                     "Methadone", "Natural/Semisynthetic Opioids", 
+                                     "Other Synthetic Opioids"))
+
+drug_age$AGE <- factor(drug_age$AGE, ordered = TRUE, 
+                       levels = c("Under 15 years", "15-24 years", "25-34 years", "35-44 years", 
+                                  "45-54 years", "55-64 years", "65-74 years", "75-84 years", 
+                                  "85 years and over", "All ages", labels = c("Under 15", "15-24", 
+                                                                              "25-34", "35-44", "45-54", 
+                                                                              "55-64", "65-74", "75-84", 
+                                                                              "Over 85", "All Ages")))
+
+bar <- ggplot(drug_age, aes(m, AGE)) +
+  geom_bar(stat = 'identity', fill = 'lightblue') + facet_wrap(~PANELS) +
+ theme(strip.background = element_rect(color="black", fill="white", size=1.5, linetype="solid")) +
+  ggtitle("Overdose Death Rate by Age for Each Drug Type", 
+          sub = "Averaged Over Years 1999-2018") + 
+  xlab("Average Overdose Death Rate") + ylab("Age Group") +
+  theme(plot.title = element_text(face = "bold", size = 12)) +
+  theme(plot.subtitle = element_text(face = "bold", color = "grey35", size=10)) +
+  theme(plot.caption = element_text(color = "grey68"))
+
+bar
+```
+
+```{r}
+drug_year <- drug %>% drop_na()
+drug_year <- subset(drug_year, UNIT=='Deaths per 100,000 resident population, age-adjusted' & STUB_NAME == 'Total' & PANEL == 'Drug overdose deaths involving any opioid' & YEAR <= 2017)
+
+unemployment <- read_csv("Downloads/unemployment.csv")
+annual <- rowMeans(unemployment[, 2:13], na.rm=T)
+unemployment$Annual <- annual
+
+drug_year <- cbind(drug_year, unemployment$Annual)
+colnames(drug_year)[16] ="unemployment"
+drug_year$unemployment <- round(drug_year$unemployment ,digit=3)
+```
+
+```{r}
+library(plotly)
+fig <- plot_ly(drug_year, x = ~ESTIMATE, y = ~unemployment, marker = list(size = 10,
+                            color = 'rgba(255, 182, 193, .9)',
+                            line = list(color = 'rgba(152, 0, 0, .8)',width = 2)), 
+                            text = ~paste("Year: ", YEAR, '<br>Unemployment:', 
+                            unemployment, '<br>Overdose Death Rate:', ESTIMATE)) %>%
+  layout(title = 'Unemployment vs Overdose Death Rate', 
+         xaxis = list(title = 'Average Overdose Death Rate'), 
+         yaxis = list(title = 'Average Unemployment Rate')) %>% 
+  layout(autosize = F, width = 700, height = 500, margin = m)
+
+fig
+``` 
+
+```{r}
+lmodel <- lm(unemployment ~ ESTIMATE, data = drug_year)
+summary(lmodel)
+```
+
+```{r}
+library(dplyr, warn.conflicts = FALSE)
+nhe <- read.csv('~/Downloads/NHE2021.csv')
+library(data.table, warn.conflicts = FALSE)
+nhe <- transpose(nhe)
+nhe_new <- nhe
+colnames(nhe_new) <- nhe[1, ]
+nhe <- nhe_new
+nhe <- nhe[-1,]
+rownames(nhe) <- c(1960:2021) 
+nhe$Year <- rownames(nhe)
+nhe <- subset(nhe, Year > 1998 & Year < 2018)
+nhe <- nhe %>% select(c(1, 2, 4, 5, 6, 281, 282, 284, 285, 286))
+colnames(nhe) <- c('Total National Health Expenditures', 'Out of pocket', 'Private Health Insurance', 'Medicare', '          Medicaid (Title XIX)', 'Total Prescription Drug Expenditures', 'Out of pocket-Drug', 'Private Health Insurance-Drug',   'Medicare-Drug', 'Medicaid (Title XIX)-Drug' )
+
+drug_total <- subset(drug, UNIT=='Deaths per 100,000 resident population, age-adjusted' & STUB_NAME == 'Total' & PANEL == 'Drug overdose deaths involving any opioid' & YEAR <= 2017)
+
+unemployment <- subset(unemployment, Year <= 2017)
+
+drug_d3 <- cbind(drug_total, unemployment$Annual)
+drug_d3 <- cbind(drug_d3, nhe$`Total National Health Expenditures`)
+colnames(drug_d3)[16] ="Unemployment"
+colnames(drug_d3)[17] ="Expenditures"
+cols <- c("YEAR", "ESTIMATE", "Unemployment", "Expenditures")
+drug_d3 <- drug_d3[cols]
+write.csv(drug_d3, "~/Downloads/drug_d3.csv")
+drug_d3
+```
