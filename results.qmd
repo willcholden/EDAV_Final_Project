@@ -1,26 +1,258 @@
 # Results
 
+## Key Takeaways
+
+We divided our key findings into three separate parts, one for each dataset inspected. First, to explore demographic trends we investigated the database of opioid overdoses. Then, we compared that information with that within the healthcare spending dataset. Finally, we compared the overdose statistics to the unemployment information.
+
+Below is a line plot which graphs the rate of overdoses by drug type for the 19 year span between 1999 and 2017. The y-axis shows the number of people who passed away for a given population of 100,000 individuals. By investigating a rate instead of a total, we can ignore the effect of the growing population.
+
 ```{r}
 library(ggplot2)
 library(tidyr)
 library(dplyr)
 
 drug <- read.csv('~/Downloads/drug_overdose.csv')
-drug_total <- drug[ which(drug$STUB_NAME=='Total'& drug$UNIT == 'Deaths per 100,000 resident population, age-adjusted' & drug$PANEL_NUM != 0), ]
+drug_total <- drug[ which(drug$STUB_NAME=='Total'& drug$UNIT == 'Deaths per 100,000 resident population, age-adjusted' & drug$PANEL_NUM != 0 & drug$PANEL_NUM != 1), ]
 drug_total <- drug_total[c("PANEL_NUM", "ESTIMATE", "YEAR")]
 
 drug_total <- drug_total %>%
-  mutate(PANEL= case_when(
-    PANEL_NUM==1 ~ "Total",
+  mutate(PANELS= case_when(
     PANEL_NUM==2 ~ "Natural or Semisynthetic",
     PANEL_NUM==3 ~ "Methadone",
     PANEL_NUM==4 ~ "Other Synthetic",
     PANEL_NUM==5 ~ "Heroin"
     ))
-drug_total$PANEL <- factor(drug_total$PANEL, levels = c("Total", "Natural or Semisynthetic", "Methadone", "Other Synthetic", "Heroin"))
-
-ggplot(drug_total, aes(x=YEAR, y=ESTIMATE, group=PANEL)) +
-  geom_line()
+ggplot(drug_total, aes(x=YEAR, y=ESTIMATE, group=factor(PANELS), color=factor(PANELS))) +
+  geom_line() +
+  coord_fixed() +
+  ggtitle("Number of Overdoses per 100,000 People") +
+  xlab("Year") +
+  ylab("Overdose Rate") +
+  labs(color = "Drug Type") +
+  scale_x_continuous(breaks = seq(1999, 2017, by=1)) +
+  scale_y_continuous(n.breaks = 10) +
+  theme(axis.text.x = element_text(angle=45, hjust=1,size=6),
+        axis.text.y = element_text(angle=0, hjust=1,size=8),
+        panel.background = element_rect(fill = 'white', color = 'gray80', size=0.25),
+        panel.grid.major = element_line(color = 'gray80', size = 0.25),
+        panel.grid.minor = element_line(color = 'gray95', size = 0.1),
+        legend.position = c(0.2, 0.75), 
+        legend.background = element_rect(fill = "white", colour = NA),
+        legend.key.size = unit(0.5, 'cm'),
+        legend.title = element_text(size=8), 
+        legend.text = element_text(size=8))   
 
 
 ```
+
+One of the research questions we were interested in solving was whether or not the CDC was correct about the three distinct spikes. They claimed that there was a dramatic rise in heroin use in 2010, and another such rise in synthetic opioids in 2013. Unfortunately, our dataset does not go back to the 1990's so we cannot see about the rise of prescription drug abuse. However, there are clearly dramatic inclines for heroin (red line) and synthetic opioids (cyan line) on the specified years. So we can conclusively say that the CDC was valid with their assertion.
+
+## Demographic Trends
+
+We were also interested in exploring whether or not race played any part in abuse patterns. Below is a heat map, faceted by drug type, that shows the fatality rates for each of four races (white, black/African American, Alaska Native/Native American, Asian/Pacific Islander).
+
+```{r}
+library(tidyverse)
+drug_demo <- drug[ which(drug$STUB_NAME=='Sex and race'& drug$UNIT == 'Deaths per 100,000 resident population, age-adjusted' & drug$PANEL_NUM != 0 & drug$PANEL_NUM != 1), ]
+
+drug_demo <- drug_demo[c("PANEL_NUM", "ESTIMATE", "YEAR", "STUB_LABEL")]
+
+drug_demo <- drug_demo %>%
+  mutate(RACE = case_when(
+    endsWith(STUB_LABEL, "White") ~ "White",
+    endsWith(STUB_LABEL, "African American") ~ "Black/African American",
+    endsWith(STUB_LABEL, "Native") ~ "Alaska Native/Native American",
+    endsWith(STUB_LABEL, "Pacific Islander") ~ "Asian/Pacific Islander",
+
+  ))
+drug_demo <- drug_demo %>%
+  mutate(PANELS= case_when(
+    PANEL_NUM==2 ~ "Natural or Semisynthetic",
+    PANEL_NUM==3 ~ "Methadone",
+    PANEL_NUM==4 ~ "Other Synthetic",
+    PANEL_NUM==5 ~ "Heroin"))
+
+
+drug_demo <- drug_demo %>% group_by(RACE, YEAR, PANELS) %>%
+                   summarise(Estimate = sum(ESTIMATE),
+                             .groups = 'drop')
+
+levels <- c("0 to 2", "2 to 4", "4 to 6", "6 to 8", "8 to 10", "more than 10")
+colors <- c("cornsilk", "lightgoldenrod1", "goldenrod1", "darkgoldenrod3", "darkgoldenrod4", "black")
+
+drug_demo <- drug_demo %>% 
+                mutate(LEVEL = case_when(
+                  (Estimate <= 2) ~ levels[1],(Estimate <= 4) ~ levels[2],(Estimate <= 6) ~ levels[3],
+                  (Estimate <= 8) ~ levels[4],(Estimate <= 10) ~ levels[5],(Estimate >= 10) ~ levels[6]))
+
+race_order <- c("White", "Black/African American", "Alaska Native/Native American", "Asian/Pacific Islander")
+
+drug_order <- drug_demo |>
+  group_by(PANELS) |>
+  summarize(drug_avg = mean(Estimate)) |>
+  arrange(drug_avg) |>
+  pull(PANELS)
+
+ggplot(drug_demo, aes(YEAR, fct_relevel(RACE, race_order), fill=LEVEL)) +
+  geom_tile(color="white", lwd=0.25) +
+  coord_fixed() +
+  facet_wrap(~fct_relevel(PANELS, drug_order), nrow=4) +
+  scale_fill_manual(values = colors) +
+  ggtitle("Overdoses by Race, Drug, and Year") +
+  xlab("Year") +
+  ylab("Race") +
+  labs(fill = "Fatal Overdoses \n per 100,000 \n Individuals") +
+  scale_x_continuous(breaks = seq(1999, 2017, by=1)) +
+  theme(axis.text.x = element_text(angle=45, hjust=1,size=6),
+        axis.text.y = element_text(angle=0, hjust=1,size=8))
+```
+
+Unfortunately, the demographic data was missing information for Asian/Pacific Islander and Alaska Native/Native American so we cannot make meaningful insights about these groups over time. The most deadly pattern displayed is heroin and synthetic opioid abuse in the years after 2015. These years saw many fatalities for members belonging to the white, black, and Alaska Native/Native American groups. Closely following those two drugs in total deaths is natural/semisynthetic opioids. These drugs had a consistent rate of casualties since about 2003, increasing slightly over time. From this data, we can observe slight discrepancies between abuse patterns among different races, but it is clear that the opioid crisis affects people of all ethnicities.
+
+## National Health Expenditures
+
+In this section, we will look at graphs that display trends between drug fatalities and the cost of healthcare in the United States. The reason we chose this specific topic was by asking ourselves what external factors may cause individuals to abuse drugs. We hypothesized that people would self-medicate using narcotics more if the price of healthcare was too expensive. Below are two line plots, one which displays the average cost of healthcare per person, and the other which shows the average cost of prescription drugs per person. This information was calculated by extracting healthcare spending data from the NHE database and dividing by the US population for each year. The result shows how much money was spent, on average, by each person in the country.
+
+```{r}
+library(dplyr, warn.conflicts = FALSE)
+library(tibble)
+nhe <- read.csv('~/Downloads/NHE2021.csv')
+pop1 = read.csv("~/Downloads/POPTOTUSA647NWDB.csv")
+pop <- pop1
+library(data.table, warn.conflicts = FALSE)
+nhe <- transpose(nhe)
+nhe_new <- nhe
+colnames(nhe_new) <- nhe[1, ]
+nhe <- nhe_new
+nhe <- nhe[-1,]
+rownames(nhe) <- c(1960:2021)
+nhe$Year <- rownames(nhe)
+nhe <- subset(nhe, Year > 1998 & Year < 2018)
+nhe <- nhe %>% select(c(2, 4, 5, 6, 282, 284, 285, 286))
+colnames(nhe) <- c('Out of pocket', 'Private Health Insurance', 'Medicare', 'Medicaid', 'Out of pocket-Drug', 'Private Health Insurance-Drug',   'Medicare-Drug', 'Medicaid-Drug' )
+
+nhe <- tibble::rownames_to_column(nhe, "Year")
+
+pop <- pop %>%
+  mutate(across(everything(), as.character))
+
+
+nhe <- bind_cols(nhe, pop['POPTOTUSA647NWDB'])
+
+nhe$POPTOTUSA647NWDB <- as.numeric(nhe$POPTOTUSA647NWDB)
+nhe$`Out of pocket`             <-  1000000*as.numeric(gsub(",", "", nhe$`Out of pocket`))/nhe$POPTOTUSA647NWDB
+nhe$`Private Health Insurance`  <-  1000000*as.numeric(gsub(",", "", nhe$`Private Health Insurance`))/nhe$POPTOTUSA647NWDB
+nhe$Medicare                    <- 1000000*as.numeric(gsub(",", "", nhe$Medicare))/nhe$POPTOTUSA647NWDB
+nhe$Medicaid                    <- 1000000*as.numeric(gsub(",", "", nhe$Medicaid))/nhe$POPTOTUSA647NWDB
+nhe$`Out of pocket-Drug`              <-  1000000*as.numeric(gsub(",", "", nhe$`Out of pocket-Drug`))/nhe$POPTOTUSA647NWDB
+nhe$`Private Health Insurance-Drug`   <-  1000000*as.numeric(gsub(",", "", nhe$`Private Health Insurance-Drug`))/nhe$POPTOTUSA647NWDB
+nhe$`Medicare-Drug`                    <- 1000000*as.numeric(gsub(",", "", nhe$`Medicare-Drug`))/nhe$POPTOTUSA647NWDB
+nhe$`Medicaid-Drug`                    <- 1000000*as.numeric(gsub(",", "", nhe$`Medicaid-Drug`))/nhe$POPTOTUSA647NWDB
+
+nhe$POPTOTUSA647NWDB <- NULL
+
+
+ nhe_long <- nhe %>% 
+   pivot_longer(!Year, names_to="Category", values_to="Amount")
+ nhe_long$Amount <- as.integer(nhe_long$Amount)
+ 
+  nhe_long$Type <- with(nhe_long, ifelse(endsWith(Category, "Drug"), "Drug", "General"))
+
+
+library(gridExtra)
+
+xs <- split(nhe_long,f = nhe_long$Type)
+
+
+p1 <- ggplot(xs$General, aes(x=Year, y=Amount, group=factor(Category))) +
+         geom_line(aes(color=Category)) +
+        geom_vline(xintercept = "2013", color="red3") +
+        geom_vline(xintercept = "2010", color="red4") +
+        facet_wrap(~Type, scales="free") +
+        theme(panel.background = element_rect(fill = 'white', color = 'gray80', size=0.25),
+              panel.grid.major = element_line(color = 'gray80', size = 0.25),
+              panel.grid.minor = element_line(color = 'gray95', size = 0.1),axis.text.x = element_text(angle=45, hjust=1,size=6),
+              axis.text.y = element_text(angle=0, hjust=1,size=6),
+              legend.position = c(0.225, 0.9), 
+              legend.background = element_rect(fill = "white", colour = NA),
+              legend.key.size = unit(.05, 'cm'),
+              legend.title = element_text(size=6), 
+              legend.text = element_text(size=6))
+
+
+p2 <- p1 %+% xs$Drug  +
+        scale_y_continuous(breaks = seq(0,500, by=25)) +
+        annotate("text", x=10, y=270, label="2010\n heroin\n spike", size=3, angle=0, color="red4") +
+        annotate("text", x=17, y=315, label="2013\n synthetics\n spike", size=3, angle=0, color="red3") +
+        labs(title= "Pharmaceutical Costs",
+        y = "Pharmaceutical Costs per Person",
+        x= "Year")
+
+p1 <- p1 %+% 
+        scale_y_continuous(breaks = seq(600, 3400, by=200)) +
+        annotate("text", x=10, y=2200, label="2010\n heroin\n spike", size=3, angle=0, color="red4") +
+        annotate("text", x=17, 2400, label="2013\n synthetics\n spike", size=3, angle=0, color="red3") +
+        labs(title= "Total Healthcare Costs",
+        y = "Healthcare Costs per Person",
+        x= "Year")
+
+grid.arrange(p1,p2, nrow=1)
+
+
+```
+
+We have included vertical lines to mark the rise in heroin and sythetics in the years 2010 and 2013, respectively. One pattern that jumped out at us was in the year 2013, when the cost of private health insurance skyrocketed, both in general and in pharmaceutical payments. The NHE defines this category as "the net cost of private health insurance which is the difference between health premiums earned and benefits incurred". Interestingly, the boom in health insurance prices in 2013 reflects a similar rise in synthetic opioid abuse. It is our contention that this inflated cost of care caused people to seek alternate solutions to medicate themselves, namely narcotics. However, correlation does not prove causation and these results may simply be coincidental. The other three categories (Medicare, Medicaid, and out of pocket expenses) do not provide us with any meaningful takeaways on the financial toll incurred by the population of this country.
+
+Below we created two scatterplots to see if there is any discernible correlation between the cost of healthcare/pharmaceuticals and the overdose rate for opioids.
+
+```{r}
+drug_all <- drug[ which(drug$STUB_NAME=='Total'& drug$UNIT == 'Deaths per 100,000 resident population, age-adjusted' & drug$PANEL_NUM == 1), ]
+drug_all <- filter(drug_all, YEAR != "2018")
+
+expenditures_drug <- filter(nhe_long, Category == "Out of pocket-Drug" | Category == "Private Health Insurance-Drug")
+expenditures_drug <- expenditures_drug %>% group_by(Year) %>%
+                                 summarize(drug_spending = sum(Amount),
+                                 .groups = 'drop') 
+
+expenditures_all <- filter(nhe_long, Category == "Out of pocket" | Category == "Private Health Insurance")
+expenditures_all <- expenditures_all %>% group_by(Year) %>%
+                                 summarize(healthcare_spending = sum(Amount),
+                                 .groups = 'drop')
+
+combined <- bind_cols(drug_all['ESTIMATE'], drug_all['YEAR'], expenditures_drug, expenditures_all, pop1['POPTOTUSA647NWDB'])
+
+
+p1 <- ggplot(combined, aes(x= healthcare_spending, y= ESTIMATE, label=YEAR))+
+  geom_point(size=0.5, color="red4") +
+  geom_text(size=2, hjust=0.5, vjust=1.5) +
+  scale_x_continuous(n.breaks = 15, breaks=waiver()) + 
+  scale_y_continuous(breaks = seq(0,15,1)) +
+  theme(panel.background = element_rect(fill = 'white', color = 'gray80', size=0.25),
+          panel.grid.major = element_line(color = 'gray80', size = 0.25),
+          panel.grid.minor = element_line(color = 'gray95', size = 0.1),
+          axis.text.x = element_text(angle=45, hjust=1,size=6),
+          axis.text.y = element_text(angle=0, hjust=1,size=6)) +
+  labs(title= "Opioid Overdoses \n vs. Cost of Healthcare",
+       y= "Total Overdoses per 100,000 People",
+       x= "Average Healthcare Costs \n(Private Insurance + Out of Pocket)\n Per Person")
+  
+
+p2 <- ggplot(combined, aes(x= drug_spending, y= ESTIMATE, label=YEAR))+
+  geom_point(size=0.5, color="red4") +
+  geom_text(size=2, hjust=0.5, vjust=1.5) +
+  scale_x_continuous(n.breaks = 15, breaks=waiver()) + 
+  scale_y_continuous(breaks = seq(0,15,1)) +
+  theme(panel.background = element_rect(fill = 'white', color = 'gray80', size=0.25),
+          panel.grid.major = element_line(color = 'gray80', size = 0.25),
+          panel.grid.minor = element_line(color = 'gray95', size = 0.1),
+          axis.text.x = element_text(angle=45, hjust=1,size=6),
+          axis.text.y = element_text(angle=0, hjust=1,size=6)) +
+  labs(title= "Opioid Overdoses \n vs. Cost of Pharmaceuticals",
+       y = "",
+       x= "Average Pharmaceutical Costs \n(Private Insurance + Out of Pocket)\n Per Person")
+
+grid.arrange(p1,p2, nrow=1)
+
+```
+
+Each point represents a year in the time frome between 1999 and 2017. On the x-axis is the average cost of healthcare/prescription drugs per person. This value is the sum of out-of-pocket costs and health insurance costs. The y-axis is the rate of opioid-related fatalities per 100,000 individuals. Using the correlation function in r, we were able to determine that there is a 91% correlation between healthcare spending and fatality rates. We also determined that there is a 69% correlation between pharmaceutical spending and fatality rates. These trends may be coincidental, or they could point to a systematic issue within the United States healthcare system that neglects the less fortunate. 
