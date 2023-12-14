@@ -9,7 +9,8 @@ Below is a line plot which graphs the rate of overdoses by drug type for the 19 
 ```{r}
 library(ggplot2)
 library(tidyr)
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
+options(warn=-1)
 
 drug <- read.csv('~/Downloads/drug_overdose.csv')
 drug_total <- drug[ which(drug$STUB_NAME=='Total'& drug$UNIT == 'Deaths per 100,000 resident population, age-adjusted' & drug$PANEL_NUM != 0 & drug$PANEL_NUM != 1), ]
@@ -52,7 +53,7 @@ One of the research questions we were interested in solving was whether or not t
 We were also interested in exploring whether or not race played any part in abuse patterns. Below is a heat map, faceted by drug type, that shows the fatality rates for each of four races (white, black/African American, Alaska Native/Native American, Asian/Pacific Islander).
 
 ```{r}
-library(tidyverse)
+suppressPackageStartupMessages(library(tidyverse))
 drug_demo <- drug[ which(drug$STUB_NAME=='Sex and race'& drug$UNIT == 'Deaths per 100,000 resident population, age-adjusted' & drug$PANEL_NUM != 0 & drug$PANEL_NUM != 1), ]
 
 drug_demo <- drug_demo[c("PANEL_NUM", "ESTIMATE", "YEAR", "STUB_LABEL")]
@@ -114,8 +115,9 @@ Unfortunately, the demographic data was missing information for Asian/Pacific Is
 In this section, we will look at graphs that display trends between drug fatalities and the cost of healthcare in the United States. The reason we chose this specific topic was by asking ourselves what external factors may cause individuals to abuse drugs. We hypothesized that people would self-medicate using narcotics more if the price of healthcare was too expensive. Below are two line plots, one which displays the average cost of healthcare per person, and the other which shows the average cost of prescription drugs per person. This information was calculated by extracting healthcare spending data from the NHE database and dividing by the US population for each year. The result shows how much money was spent, on average, by each person in the country.
 
 ```{r}
-library(dplyr, warn.conflicts = FALSE)
 library(tibble)
+suppressPackageStartupMessages(library(gridExtra))
+
 nhe <- read.csv('~/Downloads/NHE2021.csv')
 pop1 = read.csv("~/Downloads/POPTOTUSA647NWDB.csv")
 pop <- pop1
@@ -159,7 +161,7 @@ nhe$POPTOTUSA647NWDB <- NULL
   nhe_long$Type <- with(nhe_long, ifelse(endsWith(Category, "Drug"), "Drug", "General"))
 
 
-library(gridExtra)
+
 
 xs <- split(nhe_long,f = nhe_long$Type)
 
@@ -219,7 +221,7 @@ expenditures_all <- expenditures_all %>% group_by(Year) %>%
                                  summarize(healthcare_spending = sum(Amount),
                                  .groups = 'drop')
 
-combined <- bind_cols(drug_all['ESTIMATE'], drug_all['YEAR'], expenditures_drug, expenditures_all, pop1['POPTOTUSA647NWDB'])
+combined <- bind_cols(drug_all['ESTIMATE'], drug_all['YEAR'], expenditures_all['healthcare_spending'], expenditures_drug['drug_spending'], pop1['POPTOTUSA647NWDB'])
 
 
 p1 <- ggplot(combined, aes(x= healthcare_spending, y= ESTIMATE, label=YEAR))+
@@ -255,4 +257,4 @@ grid.arrange(p1,p2, nrow=1)
 
 ```
 
-Each point represents a year in the time frome between 1999 and 2017. On the x-axis is the average cost of healthcare/prescription drugs per person. This value is the sum of out-of-pocket costs and health insurance costs. The y-axis is the rate of opioid-related fatalities per 100,000 individuals. Using the correlation function in r, we were able to determine that there is a 91% correlation between healthcare spending and fatality rates. We also determined that there is a 69% correlation between pharmaceutical spending and fatality rates. These trends may be coincidental, or they could point to a systematic issue within the United States healthcare system that neglects the less fortunate. 
+Each point represents a year in the time frame between 1999 and 2017. On the x-axis is the average cost of healthcare/prescription drugs per person. This value is the sum of out-of-pocket costs and health insurance costs. The y-axis is the rate of opioid-related fatalities per 100,000 individuals. Using the correlation function in r, we were able to determine that there is a 91% correlation between healthcare spending and fatality rates. We also determined that there is a 69% correlation between pharmaceutical spending and fatality rates. These trends may be coincidental, or they could point to a systematic issue within the United States healthcare system that neglects the less fortunate. 

@@ -6,8 +6,7 @@ output: html_document
 ---
 
 ```{r}
-drug <- read.csv('/Users/keerthisri/Downloads/drug_overdose.csv')
-drug
+drug <- read.csv('~/Downloads/drug_overdose.csv')
 ```
 
 ```{r}
@@ -27,8 +26,8 @@ drug_sr1$estimate_cut = cut(drug_sr1$m,breaks = seq(0, 14,by=3.5))
 drug_sr1 <- drug_sr1 %>% 
   mutate(estimate_cut = case_when(estimate_cut == '(0,3.5]'  ~ "LOW (0,3.5]", estimate_cut == '(3.5,7]' ~ "MID (3.5,7]", estimate_cut == '(7,10.5]'  ~ "HIGH (7,10.5]", estimate_cut == '(10.5,14]'  ~ "VERY HIGH (7,10.5]" ))
 drug_sr1$estimate_cut <- factor(drug_sr1$estimate_cut, levels = c("LOW (0,3.5]", "MID (3.5,7]", "HIGH (7,10.5]","VERY HIGH (7,10.5]"))
-drug_sr1
 ```
+Below is an alluvial graph that illustrates relationships between gender, race, and overdose rate. The color of each flow represents a severity level (detailed in the legend). The thickness of each flow represents the number of years that a demographic trend has been seen. In other words, a thick line is indicative of a persistent trend over multiple years. 
 
 ```{r}
 library(ggalluvial)
@@ -46,6 +45,9 @@ ggplot(data = drug_sr1,
   theme(plot.title = element_text(face = "bold", size = 12)) +
   theme(plot.subtitle = element_text(face = "bold", color = "grey35", size=10)) + guides(color=guide_legend(title="Drug Type"))
 ```
+This graph presents interesting results gender-wise. It is evident that men encapsulate the entirety of the "high" and "very high" severity bins, specifically white and black men (see light blue and purple flows in graph). This result could point to a systematic issue that causes men to fall victim to addiction. That being said, a sizable amount of American Indian/Alaska Native women rates fall into the "moderate" category. Why does this ethnic group have disproportionately more female fatalities than every other ethnic group? Perhaps marginalized ethnic groups don't have as much access to preventative and/or life-saving measures.
+
+See the Cleveland Dot Plot below to further explore potential gender and race based trends, subdivided by drug type. 
 
 ```{r}
 drug_sr2 <- drug_sr %>% 
@@ -63,7 +65,6 @@ drug_sr2$PANELS <- factor(drug_sr2$PANELS, levels = c("All drug overdose deaths"
                           labels = c("All", "Opioid", "Heroin", 
                                      "Methadone", "Natural/Semisynthetic Opioids", 
                                      "Other Synthetic Opioids"))
-drug_sr2
 ```
 
 
@@ -85,6 +86,8 @@ dotplot <- dotplot + theme(legend.title = element_text(size = 8),
 dotplot <- dotplot + guides(color=guide_legend(title="Drug Type"))
 dotplot
 ```
+Here we can see the overdose data broken down by race, gender, and drug type. Our initial observation is that white men have incurred the highest rate of total opioid-related fatalities. After that, black/African American and American Indian/Alaska native males are about equal at seven fatalities per 100,000 individuals. This data backs up the findings discovered in the alluvial diagram above. What does this graph show us about the type of drug affecting each demographic the most? Well, five of the eight groups suffer the most from natural/semisynthetic opioid abuse. To see why this is so, revisit the heat map above. While other categories of drugs have become incredibly deadly in recent years, natural/semisynthetic drugs have been a persistent issue since the early 2000's. On the other side of the spectrum, methadone is almost unanimously the least deadly drug among different demographics. In conclusion, every demographic suffers from some combination of the narcotic categories. Each breakdown may differ slightly, but addiction does not take mercy on any one ethnicity or gender. 
+
 
 ```{r}
 drug_age <- drug %>% drop_na()
@@ -128,7 +131,7 @@ bar
 drug_year <- drug %>% drop_na()
 drug_year <- subset(drug_year, UNIT=='Deaths per 100,000 resident population, age-adjusted' & STUB_NAME == 'Total' & PANEL == 'Drug overdose deaths involving any opioid' & YEAR <= 2017)
 
-unemployment <- read_csv("Downloads/unemployment.csv")
+unemployment <- read_csv("~/Downloads/unemployment.csv")
 annual <- rowMeans(unemployment[, 2:13], na.rm=T)
 unemployment$Annual <- annual
 
@@ -147,7 +150,7 @@ fig <- plot_ly(drug_year, x = ~ESTIMATE, y = ~unemployment, marker = list(size =
   layout(title = 'Unemployment vs Overdose Death Rate', 
          xaxis = list(title = 'Average Overdose Death Rate'), 
          yaxis = list(title = 'Average Unemployment Rate')) %>% 
-  layout(autosize = F, width = 700, height = 500, margin = m)
+  layout(autosize = F, width = 600, height = 400)
 
 fig
 ``` 
