@@ -187,7 +187,7 @@ dotplot <- dotplot + guides(shape = guide_legend(override.aes = list(size = 0.9)
 dotplot <- dotplot + guides(shape = guide_legend(override.aes = list(size = 0.9)))
 dotplot <- dotplot + theme(legend.title = element_text(size = 8), 
                legend.text = element_text(size = 6))  +
-  theme(plot.title = element_text(face = "bold", size = 12)) +
+  theme(plot.title = element_text(face = "bold", size = 11.5)) +
   theme(plot.subtitle = element_text(face = "bold", color = "grey35", size=10)) +
   theme(plot.caption = element_text(color = "grey68")) +
   theme(panel.background = element_rect(fill = 'white', color = 'gray80', size=0.25),
