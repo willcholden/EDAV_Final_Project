@@ -1,24 +1,24 @@
 // data and labels to plot
     const rawData = [
-    [1999, 8092.16],
-    [2000, 8464.872],
-    [2001, 9403.975],
-    [2002, 11792.632],
-    [2003,13054.856],
-    [2004, 13761.849],
-    [2005, 15071.347],
-    [2006, 17604.414],
-    [2007, 18375.103],
-    [2008, 19462.013],
-    [2009, 20246.920],
-    [2010, 21034.245],
-    [2011, 22745.594],
-    [2012, 23226.946],
-    [2013, 24968.735],
-    [2014, 28654.769],
-    [2015, 33356.855],
-    [2016, 42968.543],
-    [2017, 48443.197]
+    [1999, 8092],
+    [2000, 8464],
+    [2001, 9403],
+    [2002, 11792],
+    [2003,13054],
+    [2004, 13761],
+    [2005, 15071],
+    [2006, 17604],
+    [2007, 18375],
+    [2008, 19462],
+    [2009, 20246],
+    [2010, 21034],
+    [2011, 22745],
+    [2012, 23226],
+    [2013, 24968],
+    [2014, 28654],
+    [2015, 33356],
+    [2016, 42968],
+    [2017, 48443]
     ]
 
       const data = rawData.map(row => {
@@ -34,7 +34,7 @@
       const bar_color = "#95BB9D";
       const top_offset = 50;
       const bottom_offset = 50;
-      
+
       /**
        * Darked/Lighten a color
        * From https://stackoverflow.com/a/13532993/10468888
@@ -44,37 +44,37 @@
           var R = parseInt(color.substring(1,3),16);
           var G = parseInt(color.substring(3,5),16);
           var B = parseInt(color.substring(5,7),16);
-      
+
           R = parseInt(R * (100 + percent) / 100);
           G = parseInt(G * (100 + percent) / 100);
           B = parseInt(B * (100 + percent) / 100);
-      
-          R = (R<255)?R:255;  
-          G = (G<255)?G:255;  
-          B = (B<255)?B:255;  
-      
+
+          R = (R<255)?R:255;
+          G = (G<255)?G:255;
+          B = (B<255)?B:255;
+
           var RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
           var GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
           var BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
-      
+
           return "#"+RR+GG+BB;
       }
-        
+
       // append svg
       const svg = d3.select("div#plot")
         .append("svg")
         .attr("fill", "red")
         .attr("width", '100%')
         .attr("height", svg_height);
-  
+
       const svg_width = svg.node().getBoundingClientRect().width;
-      
+
       // decide bar width depending upon available space and no. of bars to plot
       let bar_width = Math.round((svg_width - 60) / data.length);
       if (bar_width > max_bar_width) {
         bar_width = max_bar_width;
       }
-      
+
       const spacing = 0.15 * bar_width;
       let left_offset = Math.round((svg_width - bar_width*data.length)/2);
       if (left_offset < 0) {
@@ -88,8 +88,8 @@
       const scale_y_axis = d3.scaleLinear()
         .domain([Math.max(...data.map(d => d.overdoseRate)) ,0])
         .range([0, svg_height - top_offset - bottom_offset]);
-      
-      // create tooltip element  
+
+      // create tooltip element
       const tooltip = d3.select("body")
         .append("div")
         .attr("class","d3-tooltip")
@@ -101,7 +101,7 @@
         .style("border-radius", "5px")
         .style("color", "#fff")
         .text("a simple tooltip");
-      
+
       // append rect
       const rect = svg.selectAll("g")
         .data(data.map(d => d.overdoseRate))
@@ -125,8 +125,8 @@
           tooltip.html(``).style("visibility", "hidden");
           d3.select(this).attr("fill", bar_color);
         });
-      
-      // append text  
+
+      // append text
       svg.selectAll("g")
         .data(data.map(d => d.overdoseRate))
         .enter()
@@ -139,8 +139,8 @@
         .attr("style", "font-family:Verdana")
         .attr("style", "font-size:10px")
         .text((d, i) => data.map(d => d.year)[i]);
-      
-      // append X-Axis  
+
+      // append X-Axis
       svg.append("line")
         .attr("stroke", "#000000")
         .attr("stroke-width", 2)
@@ -148,21 +148,21 @@
         .attr("y1", svg_height - bottom_offset)
         .attr("x2", bar_width * data.length + left_offset - spacing)
         .attr("y2", svg_height - bottom_offset);
-        
-      // append Y-Axis        
+
+      // append Y-Axis
       svg.append("g")
         .attr("transform", "translate(0," + top_offset + ")")
         .call(d3.axisRight(scale_y_axis));
-    
+
       svg.append("text")
-        .attr("x", (svg_width / 2))             
+        .attr("x", (svg_width / 2))
         .attr("y", (bottom_offset/ 2))
-        .attr("text-anchor", "middle") 
-        .attr("font-weight", 700) 
-        .style("font-size", "20px")  
+        .attr("text-anchor", "middle")
+        .attr("font-weight", 700)
+        .style("font-size", "20px")
         .style('fill', 'black')
         .text("National Overdose Deaths Involving Any Opioid");
-    
+
     svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("x", -(svg_height/2))
@@ -176,7 +176,7 @@
         .style("text-anchor", "middle")
         .style('fill', 'black')
         .text("Year");
-        
+
       window.onload = () => {
         // set animation
         rect.transition()
