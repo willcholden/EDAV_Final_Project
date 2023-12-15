@@ -153,7 +153,7 @@ ggplot(data = drug_sr1,
           panel.grid.minor = element_line(color = 'gray95', size = 0.1))
 ```
 
-This graph presents interesting results gender-wise. It is evident that men encapsulate the entirety of the "high" and "very high" severity bins, specifically white and black men (see light blue and purple flows in graph). This result could point to a systematic issue that causes men to fall victim to addiction. That being said, a sizable amount of American Indian/Alaska Native women rates fall into the "moderate" category. Why does this ethnic group have disproportionately more female fatalities than every other ethnic group? Perhaps marginalized ethnic groups don't have as much access to preventative and/or life-saving measures.
+This graph presents interesting results gender-wise. It is evident that men encapsulate the entirety of the "high" and "very high" severity bins, mainly white and black men (see light blue and purple flows in graph). This result could point to a systematic issue that causes men to fall victim to addiction. That being said, a sizable amount of American Indian/Alaska Native women rates fall into the "moderate" category. Why does this ethnic group have disproportionately more female fatalities than every other ethnic group? Perhaps marginalized ethnic groups don't have as much access to preventative and/or life-saving measures.
 
 See the Cleveland Dot Plot below to further explore potential gender and race based trends, subdivided by drug type.
 
