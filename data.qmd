@@ -51,12 +51,9 @@ Our data will allow us to explore some of the potential relationships discussed 
 
 Download Dataset
 ```{r}
-<<<<<<< HEAD
-drug <- read_csv('/Users/keerthisri/Downloads/drug_overdose.csv')
-drug
-=======
+
 drug <- read.csv('~/Downloads/drug_overdose.csv')
->>>>>>> 
+   
 ```
 
 From the graph below we can see that there is only one column that contains NA values. This column is called "ESTIMATE" and refers to the estimate of the number of deaths that occured due to drug overdose. There are around 1,100 NA values in this column out of a dataset that is around 6,200 rows. This is a significant number of NA values, but looking at why these NA values exist and exploring the other columns in the dataset that correspond to a NA value in ESTIMATE can help us understand why this number is high. 
@@ -91,15 +88,12 @@ ggplot(drug_na_sub, aes(drug_na_sub$PANEL)) + geom_bar(fill='sienna') + theme(ax
 Download the dataset and perform basic preprocessing to format the dataset in a usable manner.
 
 ```{r}
-<<<<<<< HEAD
+ 
 library(dplyr)
-nhe <- read.csv('/Users/keerthisri/Downloads/NHE2021.csv')
 library(data.table)
-=======
 library(dplyr, warn.conflicts = FALSE)
 nhe <- read.csv('~/Downloads/NHE2021.csv')
-library(data.table, warn.conflicts = FALSE)
->>>>>>> 1debe666b632d8eec32dbd1f2e6f8ea72942714f
+
 nhe <- transpose(nhe)
 nhe_new <- nhe
 colnames(nhe_new) <- nhe[1, ]
@@ -122,11 +116,7 @@ ggplot(nhe_na, aes(x=column, y=na)) + geom_bar(stat='identity', fill='cornflower
 ### Unemployment Dataset
 Download the dataset and calculate the average unemployment rate per year from each month.
 ```{r}
-<<<<<<< HEAD
-unemployment <- read_csv("/Users/keerthisri/Downloads/unemployment.csv")
-=======
 unemployment <- read.csv("~/Downloads/unemployment.csv")
->>>>>>> 1debe666b632d8eec32dbd1f2e6f8ea72942714f
 annual <- rowMeans(unemployment[, 2:13], na.rm=T)
 unemployment$Annual <- annual
 ```

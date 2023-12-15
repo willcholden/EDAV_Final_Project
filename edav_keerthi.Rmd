@@ -27,7 +27,8 @@ drug_sr1 <- drug_sr1 %>%
   mutate(estimate_cut = case_when(estimate_cut == '(0,3.5]'  ~ "LOW (0,3.5]", estimate_cut == '(3.5,7]' ~ "MID (3.5,7]", estimate_cut == '(7,10.5]'  ~ "HIGH (7,10.5]", estimate_cut == '(10.5,14]'  ~ "VERY HIGH (7,10.5]" ))
 drug_sr1$estimate_cut <- factor(drug_sr1$estimate_cut, levels = c("LOW (0,3.5]", "MID (3.5,7]", "HIGH (7,10.5]","VERY HIGH (7,10.5]"))
 ```
-Below is an alluvial graph that illustrates relationships between gender, race, and overdose rate. The color of each flow represents a severity level (detailed in the legend). The thickness of each flow represents the number of years that a demographic trend has been seen. In other words, a thick line is indicative of a persistent trend over multiple years. 
+
+Below is an alluvial graph that illustrates relationships between gender, race, and overdose rate. The color of each flow represents a severity level (detailed in the legend). The thickness of each flow represents the number of years that a demographic trend has been observed. In other words, a thick line is indicative of a persistent trend over multiple years.
 
 ```{r}
 library(ggalluvial)
@@ -43,11 +44,16 @@ ggplot(data = drug_sr1,
   ggtitle("Overdose Ranges by Sex and Race", sub = "Over Years 1999-2017") + ylab("") +
   theme(legend.title = element_text(size = 6), legend.text = element_text(size = 6)) +
   theme(plot.title = element_text(face = "bold", size = 12)) +
-  theme(plot.subtitle = element_text(face = "bold", color = "grey35", size=10)) + guides(color=guide_legend(title="Drug Type"))
+  theme(plot.subtitle = element_text(face = "bold", color = "grey35", size=10)) + 
+  guides(color=guide_legend(title="Drug Type")) +
+  theme(panel.background = element_rect(fill = 'white', color = 'gray80', size=0.25),
+          panel.grid.major = element_line(color = 'gray80', size = 0.25),
+          panel.grid.minor = element_line(color = 'gray95', size = 0.1))
 ```
+
 This graph presents interesting results gender-wise. It is evident that men encapsulate the entirety of the "high" and "very high" severity bins, specifically white and black men (see light blue and purple flows in graph). This result could point to a systematic issue that causes men to fall victim to addiction. That being said, a sizable amount of American Indian/Alaska Native women rates fall into the "moderate" category. Why does this ethnic group have disproportionately more female fatalities than every other ethnic group? Perhaps marginalized ethnic groups don't have as much access to preventative and/or life-saving measures.
 
-See the Cleveland Dot Plot below to further explore potential gender and race based trends, subdivided by drug type. 
+See the Cleveland Dot Plot below to further explore potential gender and race based trends, subdivided by drug type.
 
 ```{r}
 drug_sr2 <- drug_sr %>% 
@@ -67,7 +73,6 @@ drug_sr2$PANELS <- factor(drug_sr2$PANELS, levels = c("All drug overdose deaths"
                                      "Other Synthetic Opioids"))
 ```
 
-
 ```{r}
 drug_sr2$Sex_Race <- paste(drug_sr2$Sex, drug_sr2$Race, sep = ", ")
 drug_sr2 <- subset(drug_sr2, PANELS != 'All')
@@ -82,17 +87,23 @@ dotplot <- dotplot + theme(legend.title = element_text(size = 8),
                legend.text = element_text(size = 6))  +
   theme(plot.title = element_text(face = "bold", size = 12)) +
   theme(plot.subtitle = element_text(face = "bold", color = "grey35", size=10)) +
-  theme(plot.caption = element_text(color = "grey68"))
+  theme(plot.caption = element_text(color = "grey68")) +
+  theme(panel.background = element_rect(fill = 'white', color = 'gray80', size=0.25),
+          panel.grid.major = element_line(color = 'gray80', size = 0.25),
+          panel.grid.minor = element_line(color = 'gray95', size = 0.1))
 dotplot <- dotplot + guides(color=guide_legend(title="Drug Type"))
 dotplot
 ```
-Here we can see the overdose data broken down by race, gender, and drug type. Our initial observation is that white men have incurred the highest rate of total opioid-related fatalities. After that, black/African American and American Indian/Alaska native males are about equal at seven fatalities per 100,000 individuals. This data backs up the findings discovered in the alluvial diagram above. What does this graph show us about the type of drug affecting each demographic the most? Well, five of the eight groups suffer the most from natural/semisynthetic opioid abuse. To see why this is so, revisit the heat map above. While other categories of drugs have become incredibly deadly in recent years, natural/semisynthetic drugs have been a persistent issue since the early 2000's. On the other side of the spectrum, methadone is almost unanimously the least deadly drug among different demographics. In conclusion, every demographic suffers from some combination of the narcotic categories. Each breakdown may differ slightly, but addiction does not take mercy on any one ethnicity or gender. 
 
+Here we can see the overdose data broken down by race, gender, and drug type. Our initial observation is that white men have incurred the highest rate of total opioid-related fatalities. After that, black/African American and American Indian/Alaska native males are about equal at seven fatalities per 100,000 individuals. This data backs up the findings discovered in the alluvial diagram above. What does this graph show us about the type of drug affecting each demographic the most? Well, five of the eight groups suffer the most from natural/semisynthetic opioid abuse. To see why this is so, revisit the heat map above. While other categories of drugs have become incredibly deadly in recent years, natural/semisynthetic drugs have been a persistent issue since the early 2000's. On the other side of the spectrum, methadone is almost unanimously the least deadly drug among different demographics. In conclusion, every demographic suffers from some combination of the narcotic categories. Each breakdown may differ slightly, but addiction does not take mercy on any one ethnicity or gender.
+
+Does age play a role in addiction patterns? Below is a set of bar graphs that illustrate the rates at which age groups fall victim to fatal opioid overdoses, faceted by drug type. These rates are averaged over the 19 year span between 1999 and 2017.
 
 ```{r}
 drug_age <- drug %>% drop_na()
 colnames(drug_age)[2] ="PANELS"
-drug_age <- subset(drug_age, PANELS != 'All drug overdose deaths')
+drug_age <- subset(drug_age, PANELS != 'All drug overdose deaths' & STUB_NAME == 'Age')
+
 drug_age <- drug_age %>% 
   group_by(AGE, PANELS) %>% 
   summarize(m = mean(ESTIMATE)) %>% 
@@ -122,10 +133,17 @@ bar <- ggplot(drug_age, aes(m, AGE)) +
   xlab("Average Overdose Death Rate") + ylab("Age Group") +
   theme(plot.title = element_text(face = "bold", size = 12)) +
   theme(plot.subtitle = element_text(face = "bold", color = "grey35", size=10)) +
-  theme(plot.caption = element_text(color = "grey68"))
+  theme(plot.caption = element_text(color = "grey68")) +
+  theme(panel.background = element_rect(fill = 'white', color = 'gray80', size=0.25),
+          panel.grid.major = element_line(color = 'gray80', size = 0.25),
+          panel.grid.minor = element_line(color = 'gray95', size = 0.1))
 
 bar
 ```
+
+First let's take a closer look at the "Total Opioid" graph. The fatelity rates are approximately normally distributed around the age of 45, skewed toward older ages. After the age of 64, overdose rates fall dramatically. There appears to be an incredibly small fatality rate for children under the age of 15. Now let's inspect age trends for each drug type. Interestingly, heroin and synthetic opioids are the largest issue for those 25 to 44 years of age, while methodone and natural/semisynthetic affect those who are 45 to 54 years old. In fact, natural/semisynthetic opioiods affect people older than 65 more than every other drug combined. Why does the distribution of fatalities among the different age groups vary by drug? We cannot answer this for sure, but perhaps knowing these distributions can help us to alleviate the opioid crisis by showing us where to direct preventative resources (highschools, colleges, workplaces, nursing homes, etc).
+
+Last, we were interested in seeing if the national unemployment rate had any correlation with the rate of overdoses. According to research conducted by the Suicide Prevention Resource Center, "People who were unemployed were more than 16 times as likely to die by suicide as people with jobs" ^\[1\]^. This being the case, we believed that there would be a positive correlation between the national unemployment rate and the overdose rate. Below is a scatterplot that compares the two rates, where each point represents a year from 1999 to 2017. This plot is interactive, so you can hover over a point to see which year it represents. 
 
 ```{r}
 drug_year <- drug %>% drop_na()
@@ -153,11 +171,13 @@ fig <- plot_ly(drug_year, x = ~ESTIMATE, y = ~unemployment, marker = list(size =
   layout(autosize = F, width = 600, height = 400)
 
 fig
-``` 
+```
+Initial inspection shows that there doesn't seem to be any discernible correlation between the unemployment rate and and the overdose rate. Using R, we have calculated that these two sets of data are 5% correlated (r=0.0497), meaning that an increase in unemployment doesn't necessarily correspond to an increase in overdoses. While this may be the case on a national scale, it is important that we heed the warning of the Suicide Prevention Resource Center and offer support to our friends and families who are unemployed. 
 
 ```{r}
 lmodel <- lm(unemployment ~ ESTIMATE, data = drug_year)
 summary(lmodel)
+cor(drug_year$ESTIMATE, drug_year$unemployment)
 ```
 
 ```{r}
@@ -188,3 +208,5 @@ drug_d3 <- drug_d3[cols]
 write.csv(drug_d3, "~/Downloads/drug_d3.csv")
 drug_d3
 ```
+
+$$1$$ <https://sprc.org/news/unemployment-and-suicide/>
