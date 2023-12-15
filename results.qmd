@@ -244,6 +244,8 @@ bar <- ggplot(drug_age, aes(m, AGE)) +
 
 bar
 ```
+
+
 First let's take a closer look at the "Total Opioid" graph. The fatelity rates are approximately normally distributed around the age of 45, skewed toward older ages. After the age of 64, overdose rates fall dramatically. There appears to be an incredibly small fatality rate for children under the age of 15. Now let's inspect age trends for each drug type. Interestingly, heroin and synthetic opioids are the largest issue for those 25 to 44 years of age, while methodone and natural/semisynthetic affect those who are 45 to 54 years old. In fact, natural/semisynthetic opioiods affect people older than 65 more than every other drug combined. Why does the distribution of fatalities among the different age groups vary by drug? We cannot answer this for sure, but perhaps knowing these distributions can help us to alleviate the opioid crisis by showing us where to direct preventative resources (highschools, colleges, workplaces, nursing homes, etc).
 
 
