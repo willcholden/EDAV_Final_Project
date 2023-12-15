@@ -442,3 +442,8 @@ print(paste("Correlation coefficient for unemployment and overdoses: ", corr3))
 ```
 
 Initial inspection shows that there doesn't seem to be any discernible correlation between the unemployment rate and and the overdose rate. Using R, we have calculated that these two sets of data are 5% correlated (r=0.0497), meaning that an increase in unemployment doesn't necessarily correspond to an increase in overdoses. While this may be the case on a national scale, it is important that we heed the warning of the Suicide Prevention Resource Center and offer support to our friends and families who are unemployed.
+
+
+
+
+^\[1\]^ https://sprc.org/news/unemployment-and-suicide/
